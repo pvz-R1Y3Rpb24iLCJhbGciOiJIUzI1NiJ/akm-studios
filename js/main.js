@@ -254,7 +254,6 @@ const AKM_CONFIG = {
   /* ---------- загрузка: год перетекает 1895 → 2026 ---------- */
   const loader = $('.loader');
   if (!loader) { killLoader(); intro(); return; }
-  const ERAS = [[1895, 'Первый киносеанс'], [1927, 'Звук'], [1935, 'Цвет'], [1977, 'Спецэффекты'], [1995, 'Компьютерная графика'], [2026, 'AI Cinema']];
   const Y0 = 1895, Y1 = 2026;
   const cols = $$('.year-col', loader).reverse(); // [единицы, десятки, сотни, тысячи]
   const lineEl = $('.loader-line i', loader), eraEl = $('[data-era]', loader);
@@ -268,20 +267,20 @@ const AKM_CONFIG = {
       col.style.transform = `translateY(${-((Math.floor(v / p) % 10) + (k === 0 ? v % 1 : carry))}em)`;
     });
     lineEl.style.transform = `scaleX(${(v - Y0) / (Y1 - Y0)})`;
-    let e = 0; ERAS.forEach(([yy], k) => { if (v + .5 >= yy) e = k; });
-    if (e !== eraIdx) { eraIdx = e; eraEl.style.opacity = 0; setTimeout(() => { eraEl.textContent = ERAS[e][1]; eraEl.style.opacity = 1; }, 180); }
+    if (v >= Y1 - .5 && !eraIdx) { eraIdx = 1; eraEl.style.opacity = 0; setTimeout(() => { eraEl.textContent = 'AI Cinema'; eraEl.style.opacity = 1; }, 150); }
   };
   gsap.ticker.add(render);
 
   let ready = false;
-  if (hero) { if (hero.readyState >= 3) ready = true; hero.addEventListener('canplay', () => { ready = true; }, { once: true }); setTimeout(() => { ready = true; }, 3500); } else ready = true;
+  if (hero) { if (hero.readyState >= 3) ready = true; hero.addEventListener('canplay', () => { ready = true; }, { once: true }); setTimeout(() => { ready = true; }, 1200); } else ready = true;
 
   const exit = () => gsap.timeline()
-    .to('.loader-center, .loader-line', { opacity: 0, y: -16, duration: .8, ease: 'power2.in', delay: .5 })
+    .to('.loader-center, .loader-line', { opacity: 0, y: -12, duration: .45, ease: 'power2.in', delay: .5 })
     .add(() => { document.body.classList.remove('is-loading'); if (lenis) lenis.start(); intro(); })
-    .to(loader, { opacity: 0, duration: 1, ease: 'power2.out',
+    .to(loader, { opacity: 0, duration: .6, ease: 'power2.out',
       onComplete: () => { gsap.ticker.remove(render); loader.remove(); ScrollTrigger.refresh(); } }, '-=.1');
 
-  gsap.timeline({ onComplete: function wait() { ready ? gsap.to(state, { y: Y1, duration: 1.2, ease: 'power3.out', onComplete: exit }) : setTimeout(wait, 60); } })
-    .to(state, { y: 1995, duration: 2.4, ease: 'power2.inOut', delay: .3 });
+  // весь путь 1895 → 2026 занимает около 1,3 с; если видео ещё не готово, ждём не дольше 1,2 с с начала
+  gsap.timeline({ onComplete: function wait() { ready ? gsap.to(state, { y: Y1, duration: .45, ease: 'power3.out', onComplete: exit }) : setTimeout(wait, 50); } })
+    .to(state, { y: 2012, duration: .9, ease: 'power2.in', delay: .1 });
 })();
