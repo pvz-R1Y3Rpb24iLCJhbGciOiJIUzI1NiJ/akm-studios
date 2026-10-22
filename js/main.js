@@ -62,12 +62,12 @@ const AKM_CONFIG = {
   } else card.classList.add('go');
 
   /* ---------- ИИ-строка: параметры меняются вместе с планами ролика ----------
-     Луп card.mp4 = 4 плана; смены (середины наплывов) на 2.8, 5.0 и 7.2 с. */
+     Луп card.mp4 = 4 плана; смены (середины наплывов) на 3.75, 5.5 и 6.75 с. */
   const SHOTS = [
-    { t: 0, name: 'Павильон «Северный полюс»', seed: 48213907, iter: 186, takes: 64 },
-    { t: 2.8, name: 'Машина земной оси', seed: 73920184, iter: 214, takes: 41 },
-    { t: 5.0, name: 'Кит подо льдом', seed: 15887302, iter: 162, takes: 37 },
-    { t: 7.2, name: 'Туман, белый как медведь', seed: 90461178, iter: 248, takes: 52 },
+    { t: 0, name: 'Бумажная Арктика', seed: 48213907, iter: 186, takes: 64 },
+    { t: 3.75, name: 'Ось мира', seed: 73920184, iter: 214, takes: 41 },
+    { t: 5.5, name: 'Кит подо льдом', seed: 15887302, iter: 162, takes: 37 },
+    { t: 6.75, name: 'Туман, белый как медведь', seed: 90461178, iter: 248, takes: 52 },
   ];
   const el = k => card.querySelector(`[data-ai="${k}"]`);
   const nEl = el('n'), nameEl = el('name'), seedEl = el('seed'), iterEl = el('iter'), takesEl = el('takes');
