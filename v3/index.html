@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>AKM Studios</title>
-<meta name="description" content="AKM Studios — AI Cinema &amp; Music Video Production. Кадры, которые невозможно снять на камеру: режиссура человека, кадры нейросети.">
+<meta name="description" content="AKM Studios — AI Cinema &amp; Music Video Production. Кадры, которые невозможно снять на камеру: идея и постановка — творческая команда, кадры — AI-продакшен.">
 <meta name="theme-color" content="#0E0E0F">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="AKM Studios">
@@ -23,26 +23,22 @@
 </head>
 <body>
 
-<!-- ИНТРО: нейросеть обучается и собирает логотип из частиц (~10 с) -->
+<!-- ИНТРО (~5 с): нейроны собирают логотип из частиц, внутри букв — сцена из «вокселей», которая перетекает в видео -->
 <div class="neuro" aria-hidden="true">
   <canvas class="nn"></canvas>
-  <div class="nn-hud">
-    <p class="nn-status" data-nn="status">Инициализация нейросети</p>
-    <dl>
-      <div><dt>эпоха</dt><dd data-nn="epoch">000</dd></div>
-      <div><dt>loss</dt><dd data-nn="loss">2.3026</dd></div>
-      <div><dt>точность</dt><dd data-nn="acc">00.00%</dd></div>
-      <div><dt>параметры</dt><dd data-nn="params">0.0 B</dd></div>
-    </dl>
-    <i class="nn-bar"><b data-nn="bar"></b></i>
-  </div>
   <button class="nn-skip" type="button">Пропустить</button>
 </div>
+
+<header class="top">
+  <img class="logo" src="media/AKM_site.svg" alt="AKM Studios" width="196" height="22">
+  <nav class="v3-nav"><a href="#work">Сцены</a><a href="#approach">Подход</a><a href="#process">Процесс</a><a href="#contact">Контакты</a></nav>
+</header>
 
 <main class="card">
   <video class="bg" autoplay muted loop playsinline preload="auto" poster="media/poster_card.jpg"
     data-src-desktop="media/card.mp4" data-src-mobile="media/card_720.mp4" aria-hidden="true"></video>
   <div class="shade" aria-hidden="true"></div>
+  <canvas class="vox" aria-hidden="true"></canvas>
 
   <!-- логотип с роликом внутри букв; от первого движения (или сам) камера влетает в букву K -->
   <div class="intro" aria-hidden="true">
@@ -51,10 +47,6 @@
     <p class="intro-cue"><span>Листайте</span><i></i></p>
   </div>
 
-  <header class="top in" style="--d:.1s">
-    <img class="logo" src="media/AKM_site.svg" alt="AKM Studios" width="196" height="22">
-    <nav class="v3-nav"><a href="#work">Сцены</a><a href="#approach">Подход</a><a href="#process">Процесс</a><a href="#contact">Контакты</a></nav>
-  </header>
 
   <section class="main">
    <div class="main-text">
@@ -63,7 +55,7 @@
       <span class="in" style="--d:.45s">невозможно снять</span>
       <span class="in accent" style="--d:.6s">на камеру</span>
     </h1>
-    <p class="lead in" style="--d:.85s">Режиссура человека, кадры нейросети. Музыкальные клипы и визуал для артистов с постановкой, светом и масштабом большого кино.</p>
+    <p class="lead in" style="--d:.85s">Творческая команда и <span class="nw">AI-продакшен</span> полного цикла. Музыкальные клипы и визуал для артистов с постановкой, светом и масштабом большого кино.</p>
    </div>
     <div class="ai in" style="--d:1s" aria-hidden="true">
       <p class="ai-top"><i class="ai-dot"></i>ИИ-генерация · кадр <b data-ai="n">01</b> / 04</p>
@@ -88,35 +80,57 @@
 
 <!-- НИЖЕ: блоки версии 2 в тёмном исполнении -->
 <section class="x work" id="work">
-  <div class="x-head"><h2 class="x-h2">Миры, которых нет<br><span class="soft">на съёмочной площадке</span></h2><p class="x-kicker">01 — Сцены</p></div>
-  <ol class="strip" aria-label="Сцены">
-    <li class="frame"><img src="media/frame_01.jpg" alt="Закат над горной тропой" loading="lazy"><p><b>Закат над тропой</b><span>Свет · камера</span></p></li>
-    <li class="frame"><img src="media/frame_02.jpg" alt="Гора в форме медведя" loading="lazy"><p><b>Гора-медведь</b><span>Масштаб · физика</span></p></li>
-    <li class="frame"><img src="media/frame_03.jpg" alt="Маковое поле в солнце" loading="lazy"><p><b>Маковое поле</b><span>Свет · цвет</span></p></li>
-    <li class="frame"><img src="media/frame_04.jpg" alt="Туман в форме медведя над ущельем" loading="lazy"><p><b>Туман, белый как медведь</b><span>Физика · образ</span></p></li>
-    <li class="frame"><img src="media/frame_05.jpg" alt="Бумажный медведь под северным сиянием" loading="lazy"><p><b>Бумажная Арктика</b><span>Стиль · свет</span></p></li>
-    <li class="frame"><img src="media/frame_06.jpg" alt="Бумажные медведи и глобус" loading="lazy"><p><b>Ось мира</b><span>Персонажи · стиль</span></p></li>
-    <li class="frame"><img src="media/frame_07.jpg" alt="Золотая машина земной оси" loading="lazy"><p><b>Машина земной оси</b><span>Ретрофутуризм</span></p></li>
-    <li class="frame"><img src="media/frame_08.jpg" alt="Глаз кита подо льдом" loading="lazy"><p><b>Кит подо льдом</b><span>Масштаб · камера</span></p></li>
-    <li class="frame"><img src="media/frame_09.jpg" alt="Орбитальная станция-кольцо" loading="lazy"><p><b>Орбитальное кольцо</b><span>Миры · масштаб</span></p></li>
+  <div class="x-head"><h2 class="x-h2">Миры, которых нет<br><span class="soft">на съёмочной площадке</span></h2><p class="x-note">Фрагменты из наших генераций, замедленные. Без звука.</p><p class="x-kicker">01 — Сцены</p></div>
+  <ol class="scenes" aria-label="Сцены">
+    <li class="scene wide">
+      <div class="scene-v"><video muted loop playsinline preload="none" poster="media/w_sunset.jpg" data-src="media/w_sunset.mp4" aria-label="Последний свет"></video></div>
+      <div class="scene-t"><span class="scene-n">01</span><b>Последний свет</b><span class="scene-tag">Свет · 35 мм</span></div>
+      <p>Контровое солнце, длинные тени, медленный проход камеры по тропе.</p>
+    </li>
+    <li class="scene">
+      <div class="scene-v"><video muted loop playsinline preload="none" poster="media/w_mountain.jpg" data-src="media/w_mountain.mp4" aria-label="Гора, которая дышит"></video></div>
+      <div class="scene-t"><span class="scene-n">02</span><b>Гора, которая дышит</b><span class="scene-tag">Масштаб · аэросъёмка</span></div>
+      <p>Хребет складывается в силуэт медведя — кадр, который не найти ни в одной локации.</p>
+    </li>
+    <li class="scene">
+      <div class="scene-v"><video muted loop playsinline preload="none" poster="media/w_poppies.jpg" data-src="media/w_poppies.mp4" aria-label="Полдень в маках"></video></div>
+      <div class="scene-t"><span class="scene-n">03</span><b>Полдень в маках</b><span class="scene-tag">Цвет · оптика</span></div>
+      <p>Тёплая палитра плёнки, мягкий фокус и ветер, который видно в каждом лепестке.</p>
+    </li>
+    <li class="scene">
+      <div class="scene-v"><video muted loop playsinline preload="none" poster="media/w_fog.jpg" data-src="media/w_fog.mp4" aria-label="Белый зверь"></video></div>
+      <div class="scene-t"><span class="scene-n">04</span><b>Белый зверь</b><span class="scene-tag">Атмосфера · образ</span></div>
+      <p>Туман над ущельем медленно принимает форму зверя и снова растворяется.</p>
+    </li>
+    <li class="scene">
+      <div class="scene-v"><video muted loop playsinline preload="none" poster="media/w_paper.jpg" data-src="media/w_paper.mp4" aria-label="Бумажная Арктика"></video></div>
+      <div class="scene-t"><span class="scene-n">05</span><b>Бумажная Арктика</b><span class="scene-tag">Стиль · анимация</span></div>
+      <p>Северное сияние в технике бумажной аппликации: фактура, слои, глубина.</p>
+    </li>
+    <li class="scene">
+      <div class="scene-v"><video muted loop playsinline preload="none" poster="media/w_whale.jpg" data-src="media/w_whale.mp4" aria-label="Подо льдом"></video></div>
+      <div class="scene-t"><span class="scene-n">06</span><b>Подо льдом</b><span class="scene-tag">Глубина · масштаб</span></div>
+      <p>Глаз кита сквозь толщу льда — масштаб, которого нет у живой съёмки.</p>
+    </li>
   </ol>
 </section>
 
 <section class="x approach" id="approach">
-  <div class="x-head"><h2 class="x-h2">Сначала история.<br><span class="soft">Потом нейросеть.</span></h2><p class="x-kicker">02 — Подход</p></div>
+  <div class="x-head"><h2 class="x-h2">Сначала история.<br><span class="soft">Потом <span class="nw">AI-продакшен.</span></span></h2><p class="x-kicker">02 — Подход</p></div>
   <div class="venn-wrap">
-    <svg class="venn" viewBox="0 0 720 420" role="img" aria-label="Режиссёр и нейросеть, на пересечении AKM Studios">
+    <svg class="venn" viewBox="0 0 720 420" role="img" aria-label="Творческая команда и AI-продакшен, на пересечении AKM Studios">
       <circle class="c c1" cx="260" cy="210" r="190" pathLength="1"/>
       <circle class="c c2" cx="460" cy="210" r="190" pathLength="1"/>
-      <text x="105" y="200" class="vt">Режиссёр</text>
-      <text x="105" y="226" class="vs">история · герои · вкус</text>
-      <text x="615" y="200" class="vt" text-anchor="end">Нейросеть</text>
-      <text x="615" y="226" class="vs" text-anchor="end">миры · масштаб · кадр</text>
+      <text x="105" y="200" class="vt">Творческая</text>
+      <text x="105" y="228" class="vt">команда</text>
+      <text x="105" y="256" class="vs">история · герои · вкус</text>
+      <text x="615" y="214" class="vt" text-anchor="end">AI-продакшен</text>
+      <text x="615" y="242" class="vs" text-anchor="end">миры · масштаб · кадр</text>
       <circle class="dot" cx="360" cy="210" r="7"/>
       <text x="360" y="246" class="vm" text-anchor="middle">AKM Studios</text>
     </svg>
     <ul class="pillars">
-      <li><b>Человек ведёт историю</b><p>Сценарий, герои, ритм и вкус — решения режиссёра. Нейросеть не придумывает клип за нас.</p></li>
+      <li><b>Человек ведёт историю</b><p>Сценарий, герои, ритм и вкус — решения творческой команды. <span class="nw">AI-продакшен</span> не придумывает клип за нас, а воплощает задуманное.</p></li>
       <li><b>Постановка большого кино</b><p>Свет, камера, композиция и цвет выстраиваются так же, как на съёмочной площадке.</p></li>
       <li><b>ИИ расширяет кадр</b><p>Северное сияние, кит подо льдом, гора-медведь — то, что невозможно снять, становится возможным.</p></li>
     </ul>

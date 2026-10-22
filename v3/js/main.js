@@ -1,7 +1,7 @@
 /* =====================================================================
    AKM Studios — версия 3
-   Интро: нейросеть «обучается» и за ~10 секунд собирает логотип из частиц,
-   затем ролик внутри букв и пролёт в букву K → визитка → блоки ниже.
+   Интро (~5 с): нейроны собирают логотип из частиц, в точках проступает живой кадр,
+   пролёт в букву K — сцена из точек перетекает в видео → визитка → блоки ниже.
    Видео без звука. Ниже — настройки ссылок для заказчика.
    ===================================================================== */
 
@@ -49,52 +49,112 @@ const AKM_CONFIG = {
     document.addEventListener('visibilitychange', () => { if (document.hidden) v.pause(); else v.play().catch(() => {}); });
   }
 
-  /* ---------- пролёт в букву K (как в версии 1) ---------- */
+  /* ---------- сцена из «вокселей»: живой кадр ролика, собранный из светящихся точек ----------
+     Внутри букв логотипа и после влёта в K ролик сначала виден как сетка точек,
+     затем волна от центра растворяет точки в настоящее видео. */
+  const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  const vox = (() => {
+    const cv = $('.vox', card);
+    const off = { size() {}, start() {}, dissolve() {}, paint() {}, grab() {}, kill() {}, cell: 4, dpr: 1, W: 0, H: 0 };
+    if (!cv || reduced) { cv && cv.remove(); return off; }
+    const c = cv.getContext('2d'), g = document.createElement('canvas'), gc = g.getContext('2d');
+    const poster = new Image(); poster.src = v.poster;
+    const api = { cell: 4, dpr: 1, W: 0, H: 0 };
+    let cols = 0, rows = 0, pat = null, run = false, d0 = 0;
+    api.size = () => {
+      const r = card.getBoundingClientRect();
+      const dpr = api.dpr = Math.min(2, devicePixelRatio || 1);
+      const W = api.W = Math.round(r.width * dpr), H = api.H = Math.round(r.height * dpr);
+      cv.width = W; cv.height = H;
+      const cell = api.cell = Math.max(3, Math.round((mobile ? 2.6 : 3.4) * dpr));
+      cols = g.width = Math.ceil(W / cell); rows = g.height = Math.ceil(H / cell);
+      const pc = document.createElement('canvas'); pc.width = pc.height = cell;
+      const p = pc.getContext('2d');
+      p.fillStyle = '#000'; p.fillRect(0, 0, cell, cell);
+      p.globalCompositeOperation = 'destination-out'; p.beginPath(); p.arc(cell / 2, cell / 2, cell * .37, 0, 6.283); p.fill();
+      pat = c.createPattern(pc, 'repeat');
+    };
+    // кадр ролика (как object-fit: cover) в сетку: один пиксель сетки — одна точка
+    api.grab = () => {
+      const src = v.readyState >= 2 ? v : poster, sw = src.videoWidth || src.naturalWidth, sh = src.videoHeight || src.naturalHeight;
+      if (!sw) return;
+      const k = Math.max(api.W / sw, api.H / sh) / api.cell;
+      gc.setTransform(k, 0, 0, k, (api.W / api.cell - sw * k) / 2, (api.H / api.cell - sh * k) / 2);
+      gc.drawImage(src, 0, 0);
+    };
+    // сцена точками в любой контекст размером W×H (в пикселях устройства)
+    api.paint = x => {
+      x.imageSmoothingEnabled = false;
+      x.filter = 'saturate(1.3) brightness(1.3)';
+      x.drawImage(g, 0, 0, cols * api.cell, rows * api.cell);
+      x.filter = 'none';
+      x.fillStyle = pat; x.fillRect(0, 0, api.W, api.H);
+    };
+    const tick = now => {
+      if (!run) return;
+      api.grab();
+      c.globalCompositeOperation = 'source-over'; c.clearRect(0, 0, api.W, api.H); api.paint(c);
+      if (d0 && now > d0) {
+        const k = Math.min(1, (now - d0) / 1300), R = Math.hypot(api.W, api.H) * .62 * ease(k), edge = 180 * api.dpr;
+        const gr = c.createRadialGradient(api.W / 2, api.H / 2, Math.max(0, R - edge), api.W / 2, api.H / 2, R + 1);
+        gr.addColorStop(0, '#000'); gr.addColorStop(1, 'rgba(0,0,0,0)');
+        c.globalCompositeOperation = 'destination-out'; c.fillStyle = gr; c.fillRect(0, 0, api.W, api.H);
+        if (k >= 1) return api.kill();
+      }
+      requestAnimationFrame(tick);
+    };
+    api.start = () => { if (run) return; run = true; api.grab(); api.paint(c); requestAnimationFrame(tick); };
+    api.dissolve = delay => { d0 = performance.now() + delay; };
+    api.kill = () => { run = false; cv.remove(); };
+    addEventListener('resize', () => { if (run) api.size(); });
+    return api;
+  })();
+
+  /* ---------- пролёт в букву K ---------- */
   const intro = $('.intro', card), maskImg = $('.intro-mask img', card);
+  const EVENTS = ['wheel', 'touchstart', 'keydown', 'pointerdown'];
   let flown = false, logoShown = false;
+  const ready = () => { card.classList.add('go'); root.classList.add('ready'); unlock(); };
   const fly = () => {
     if (flown || !logoShown) return;
     flown = true;
-    ['wheel', 'touchstart', 'keydown', 'pointerdown'].forEach(ev => removeEventListener(ev, fly));
-    $$('.intro-en, .intro-cue', intro).forEach(el => el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, fill: 'forwards' }));
-    maskImg.animate([{ transform: 'scale(1)' }, { transform: 'scale(70)' }], { duration: 1500, easing: 'cubic-bezier(.7, 0, .84, 0)', fill: 'forwards' });
-    $('.intro-mask', intro).animate([{ opacity: 1 }, { opacity: 0 }], { duration: 350, delay: 1250, fill: 'forwards' });
-    setTimeout(() => { card.classList.add('go'); unlock(); }, 1350);
+    EVENTS.forEach(ev => removeEventListener(ev, fly));
+    $$('.intro-en, .intro-cue', intro).forEach(el => el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 250, fill: 'forwards' }));
+    maskImg.animate([{ transform: 'scale(1)' }, { transform: 'scale(70)' }], { duration: 1100, easing: 'cubic-bezier(.7, 0, .84, 0)', fill: 'forwards' });
+    $('.intro-mask', intro).animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, delay: 850, fill: 'forwards' });
+    vox.dissolve(1050);                    // сцена из точек перетекает в видео
+    setTimeout(ready, 950);
   };
   const showLogo = () => {
     if (logoShown) return;
     logoShown = true;
+    vox.start();
     card.classList.add('logo-on');
-    setTimeout(() => ['wheel', 'touchstart', 'keydown', 'pointerdown'].forEach(ev => addEventListener(ev, fly, { passive: true })), 400);
-    setTimeout(fly, 3200);
+    setTimeout(() => EVENTS.forEach(ev => addEventListener(ev, fly, { passive: true })), 150);
+    if (!/nnhold/.test(location.search)) setTimeout(fly, 350);
   };
+  if (reduced) root.classList.add('ready');
 
-  /* ---------- интро: нейросеть собирает логотип ---------- */
+  /* ---------- интро (~5 с): нейроны → частицы садятся в точки логотипа → в точках проступает сцена ---------- */
   if (!reduced && neuro) {
+    history.scrollRestoration = 'manual'; scrollTo(0, 0);
     const cv = $('.nn', neuro), ctx = cv.getContext('2d');
-    const hud = k => $(`[data-nn="${k}"]`, neuro);
-    const H = { status: hud('status'), epoch: hud('epoch'), loss: hud('loss'), acc: hud('acc'), params: hud('params'), bar: hud('bar') };
-    const T_NET = 3600, T_FLY_END = 8600, T_END = 9800;   // мс: сеть → полёт частиц → логотип
-    const T_OFF = +(new URLSearchParams(location.search).get('nnt') || 0); // для проверки: ?nnt=6000 — начать интро с 6-й секунды
-    let W = 0, Hh = 0, dpr = 1, nodes = [], edges = [], parts = [], pulses = [], t0 = 0, raf = 0, ended = false;
+    const T_MIX = 2500, T_END = 3100;   // мс: частицы на местах → в точках проступает кадр → логотип с роликом
+    const QS = new URLSearchParams(location.search), T_OFF = +(QS.get('nnt') || 0), HOLD = QS.has('nnhold'); // для проверки: ?nnt=2000 — со 2-й секунды, &nnhold — замереть
+    let W = 0, Hh = 0, nodes = [], edges = [], parts = [], pulses = [], t0 = 0, raf = 0, ended = false, dot = 2;
+    const L = document.createElement('canvas'), lc = L.getContext('2d');   // сцена точками, вырезанная по буквам
+    let mr = null;
 
     const layout = () => {
-      dpr = Math.min(2, devicePixelRatio || 1);
+      const dpr = vox.dpr;
       W = innerWidth; Hh = innerHeight;
-      cv.width = W * dpr; cv.height = Hh * dpr;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      // слои сети
+      cv.width = Math.round(W * dpr); cv.height = Math.round(Hh * dpr);
       const counts = mobile ? [4, 7, 9, 9, 7, 4] : [5, 9, 13, 15, 13, 9, 5];
+      const x0 = W * .1, x1 = W * .9, top = Hh * .2, bot = Hh * .78, max = Math.max(...counts);
       nodes = []; edges = [];
-      const x0 = W * .1, x1 = W * .9, top = Hh * .2, bot = Hh * .78;
       counts.forEach((n, li) => {
-        const x = x0 + (x1 - x0) * li / (counts.length - 1);
-        for (let i = 0; i < n; i++) nodes.push({ x, y: top + (bot - top) * (n === 1 ? .5 : i / (n - 1)) * 1 + (bot - top) * (1 - (n - 1) / (Math.max(...counts) - 1)) / 2 * (n === 1 ? 0 : 1), l: li, born: li * 260 + i * 18 });
-      });
-      // вертикально центрируем каждый слой
-      counts.forEach((n, li) => {
-        const ls = nodes.filter(nd => nd.l === li), mid = (top + bot) / 2, span = (bot - top) * (n - 1) / (Math.max(...counts) - 1);
-        ls.forEach((nd, i) => { nd.y = mid - span / 2 + (n === 1 ? 0 : span * i / (n - 1)); });
+        const x = x0 + (x1 - x0) * li / (counts.length - 1), span = (bot - top) * (n - 1) / (max - 1), mid = (top + bot) / 2;
+        for (let i = 0; i < n; i++) nodes.push({ x, y: mid - span / 2 + (n === 1 ? 0 : span * i / (n - 1)), l: li, born: li * 110 + i * 8 });
       });
       for (let li = 0; li < counts.length - 1; li++) {
         const a = nodes.filter(nd => nd.l === li), b = nodes.filter(nd => nd.l === li + 1);
@@ -102,45 +162,45 @@ const AKM_CONFIG = {
       }
     };
 
-    // точки логотипа: рисуем SVG в том же месте и размере, где потом появится логотип с роликом
+    // точки логотипа — ровно центры ячеек той же сетки, из которой потом собрана сцена
     const sampleLogo = () => new Promise(res => {
-      const r = maskImg.getBoundingClientRect();
-      const w = Math.round(r.width), h = Math.round(r.height);
+      const r = maskImg.getBoundingClientRect(), { dpr, cell } = vox;
+      const ox = r.left * dpr, oy = r.top * dpr, w = Math.round(r.width * dpr), h = Math.round(r.height * dpr);
       const img = new Image();
       img.onload = () => {
         try {
           const oc = document.createElement('canvas'); oc.width = w; oc.height = h;
           const o = oc.getContext('2d'); o.drawImage(img, 0, 0, w, h);
-          const data = o.getImageData(0, 0, w, h).data, pts = [], step = 2;
-          for (let y = 0; y < h; y += step) for (let x = 0; x < w; x += step) if (data[(y * w + x) * 4 + 3] > 140) pts.push([r.left + x, r.top + y, x < w * .075]); // третий флаг — точка логотипа
-          for (let i = pts.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [pts[i], pts[j]] = [pts[j], pts[i]]; }
-          res(pts.slice(0, mobile ? 1300 : 3000));
+          const data = o.getImageData(0, 0, w, h).data, pts = [];
+          for (let y = Math.floor(oy / cell); (y + .5) * cell < oy + h; y++) for (let x = Math.floor(ox / cell); (x + .5) * cell < ox + w; x++) {
+            const cx = (x + .5) * cell, cy = (y + .5) * cell, lx = Math.floor(cx - ox), ly = Math.floor(cy - oy);
+            if (lx >= 0 && ly >= 0 && data[(ly * w + lx) * 4 + 3] > 120) pts.push([cx / dpr, cy / dpr, lx < w * .075]); // третий флаг — точка логотипа
+          }
+          mr = { img, ox, oy, w, h };
+          res(pts);
         } catch (e) { res([]); }
       };
       img.onerror = () => res([]);
       img.src = maskImg.currentSrc || maskImg.src;
     });
 
-    const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-    const fmt = (n, d) => n.toFixed(d);
-
     const frame = now => {
       if (!t0) t0 = now;
-      const t = now - t0 + T_OFF;
+      const t = HOLD ? Math.min(T_OFF, T_END - 1) : now - t0 + T_OFF, dpr = vox.dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, W, Hh);
 
-      // 1) сеть: слои загораются, по связям бегут сигналы; во время сборки сеть гаснет
-      const fade = t < T_NET ? 1 : Math.max(0, 1 - (t - T_NET) / 2600);
+      // 1) сеть: слои вспыхивают, по связям бегут сигналы; пока частицы летят — сеть гаснет
+      const fade = t < 1300 ? 1 : Math.max(0, 1 - (t - 1300) / 1100);
       if (fade > 0) {
         ctx.lineWidth = 1;
         ctx.strokeStyle = `rgba(241,238,232,${.07 * fade})`;
         ctx.beginPath();
-        edges.forEach(([p, q]) => { const vis = Math.min(1, Math.max(0, (t - q.born) / 500)); if (vis > 0) { ctx.moveTo(p.x, p.y); ctx.lineTo(p.x + (q.x - p.x) * vis, p.y + (q.y - p.y) * vis); } });
+        edges.forEach(([p, q]) => { const vis = Math.min(1, Math.max(0, (t - q.born) / 350)); if (vis > 0) { ctx.moveTo(p.x, p.y); ctx.lineTo(p.x + (q.x - p.x) * vis, p.y + (q.y - p.y) * vis); } });
         ctx.stroke();
-        // сигналы
-        if (t < T_NET + 1500 && Math.random() < .9) for (let k = 0; k < (mobile ? 2 : 4); k++) {
+        if (t < 1900) for (let k = 0; k < (mobile ? 3 : 6); k++) {
           const e = edges[(Math.random() * edges.length) | 0];
-          if (t > e[1].born) pulses.push({ e, s: 0, v: .012 + Math.random() * .02 });
+          if (t > e[1].born) pulses.push({ e, s: 0, v: .02 + Math.random() * .03 });
         }
         ctx.globalCompositeOperation = 'lighter';
         pulses = pulses.filter(pu => (pu.s += pu.v) < 1);
@@ -149,7 +209,7 @@ const AKM_CONFIG = {
           ctx.fillStyle = `rgba(240,122,74,${.85 * fade})`; ctx.fillRect(x - 1.2, y - 1.2, 2.4, 2.4);
         });
         nodes.forEach(nd => {
-          const a = Math.min(1, Math.max(0, (t - nd.born) / 400)) * fade;
+          const a = Math.min(1, Math.max(0, (t - nd.born) / 300)) * fade;
           if (!a) return;
           ctx.fillStyle = `rgba(241,238,232,${.12 * a})`; ctx.beginPath(); ctx.arc(nd.x, nd.y, 7, 0, 6.283); ctx.fill();
           ctx.fillStyle = `rgba(241,238,232,${.9 * a})`; ctx.beginPath(); ctx.arc(nd.x, nd.y, 2.2, 0, 6.283); ctx.fill();
@@ -157,30 +217,31 @@ const AKM_CONFIG = {
         ctx.globalCompositeOperation = 'source-over';
       }
 
-      // 2) частицы срываются с нейронов и летят в форму логотипа (слева направо)
-      ctx.globalCompositeOperation = 'lighter';
-      parts.forEach(p => {
-        const k = Math.min(1, Math.max(0, (t - p.ts) / p.dur));
-        if (k <= 0) return;
-        const e = ease(k), u = 1 - e;
-        const x = u * u * p.sx + 2 * u * e * p.cx + e * e * p.tx;
-        const y = u * u * p.sy + 2 * u * e * p.cy + e * e * p.ty;
-        const glow = k < 1 ? .9 : .75 + .25 * Math.sin(t / 220 + p.ph);
-        ctx.fillStyle = p.hot ? `rgba(240,122,74,${glow})` : `rgba(241,238,232,${glow})`;
-        const s = k < 1 ? 1.6 : 1.3;
-        ctx.fillRect(x - s / 2, y - s / 2, s, s);
-      });
-      ctx.globalCompositeOperation = 'source-over';
+      // 2) частицы срываются с нейронов и садятся в точки логотипа (волной слева направо)
+      const mix = Math.min(1, Math.max(0, (t - T_MIX) / (T_END - T_MIX)));
+      if (mix < 1) {
+        ctx.globalCompositeOperation = 'lighter';
+        parts.forEach(p => {
+          const k = Math.min(1, Math.max(0, (t - p.ts) / p.dur));
+          if (k <= 0) return;
+          const e = ease(k), u = 1 - e;
+          const x = u * u * p.sx + 2 * u * e * p.cx + e * e * p.tx;
+          const y = u * u * p.sy + 2 * u * e * p.cy + e * e * p.ty;
+          const a = (k < 1 ? .95 : .8 + .2 * Math.sin(t / 160 + p.ph)) * (1 - mix);
+          ctx.fillStyle = p.hot ? `rgba(240,122,74,${a})` : `rgba(241,238,232,${a})`;
+          const s = k < 1 ? dot * 1.3 : dot;
+          ctx.fillRect(x - s / 2, y - s / 2, s, s);
+        });
+        ctx.globalCompositeOperation = 'source-over';
+      }
 
-      // 3) HUD: цифры «обучения»
-      const pr = Math.min(1, t / T_END);
-      H.epoch.textContent = String(Math.round(120 * pr)).padStart(3, '0');
-      H.loss.textContent = fmt(2.3026 * Math.exp(-4.8 * pr) + .0021, 4);
-      H.acc.textContent = fmt(99.74 * (1 - Math.exp(-4.2 * pr)), 2).padStart(5, '0') + '%';
-      H.params.textContent = fmt(1.3 * Math.min(1, pr * 1.6), 1) + ' B';
-      H.bar.style.transform = `scaleX(${pr})`;
-      const st = t < T_NET ? 'Обучение нейросети' : t < T_FLY_END ? 'Генерация логотипа' : 'Готово · AKM Studios';
-      if (H.status.textContent !== st) H.status.textContent = st;
+      // 3) в точках проступает живой кадр ролика — ровно то, что дальше покажет логотип
+      if (mix > 0 && mr) {
+        vox.grab();
+        lc.globalCompositeOperation = 'source-over'; lc.clearRect(0, 0, L.width, L.height); vox.paint(lc);
+        lc.globalCompositeOperation = 'destination-in'; lc.drawImage(mr.img, mr.ox, mr.oy, mr.w, mr.h);
+        ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = mix; ctx.drawImage(L, 0, 0); ctx.globalAlpha = 1;
+      }
 
       if (t >= T_END) return finish();
       raf = requestAnimationFrame(frame);
@@ -189,11 +250,14 @@ const AKM_CONFIG = {
     const finish = () => {
       if (ended) return;
       ended = true; cancelAnimationFrame(raf);
-      showLogo();                         // логотип с роликом внутри — на месте частиц
+      showLogo();                         // под оверлеем уже та же картинка — подмена незаметна
       neuro.classList.add('done');
-      setTimeout(() => neuro.remove(), 1200);
+      setTimeout(() => neuro.remove(), 700);
     };
 
+    vox.size();
+    L.width = vox.W; L.height = vox.H;
+    dot = vox.cell / vox.dpr * .74;
     layout();
     sampleLogo().then(pts => {
       if (!pts.length) { finish(); return; }
@@ -201,10 +265,10 @@ const AKM_CONFIG = {
       parts = pts.map(([tx, ty, isDot]) => {
         const n = src[(Math.random() * src.length) | 0];
         const sx = n.x + (Math.random() - .5) * 10, sy = n.y + (Math.random() - .5) * 10;
-        const mx = (sx + tx) / 2, my = (sy + ty) / 2, off = (Math.random() - .5) * 260;
-        return { sx, sy, tx, ty, cx: mx - (ty - sy) * off / 600, cy: my + (tx - sx) * off / 600,
-          ts: T_NET + (tx / W) * 2600 + Math.random() * 700, dur: 1700 + Math.random() * 700,
-          hot: isDot || Math.random() < .06, ph: Math.random() * 6.283 };
+        const mx = (sx + tx) / 2, my = (sy + ty) / 2, o = (Math.random() - .5) * 260;
+        return { sx, sy, tx, ty, cx: mx - (ty - sy) * o / 600, cy: my + (tx - sx) * o / 600,
+          ts: 350 + (tx / W) * 900 + Math.random() * 280, dur: 800 + Math.random() * 380,
+          hot: isDot || Math.random() < .05, ph: Math.random() * 6.283 };
       });
       raf = requestAnimationFrame(frame);
     });
@@ -243,17 +307,21 @@ const AKM_CONFIG = {
   }
 
   /* ---------- блоки ниже: появление и плёнка ---------- */
-  const targets = [...$$('.x-head, .frame, .pillars li, .steps li, .x-contact, .contact-row, .x-foot'), $('.venn')].filter(Boolean);
+  const targets = [...$$('.x-head, .scene, .pillars li, .steps li, .x-contact, .contact-row, .x-foot'), $('.venn')].filter(Boolean);
   if (!reduced) {
     targets.forEach(t => { if (!t.classList.contains('venn')) t.classList.add('reveal'); });
     const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('on'); io.unobserve(e.target); } }), { threshold: .2 });
     targets.forEach(t => io.observe(t));
   } else targets.forEach(t => t.classList.add('on'));
-  const strip = $('.strip');
-  if (strip) {
-    let down = false, x0 = 0, s0 = 0;
-    strip.addEventListener('pointerdown', e => { if (e.pointerType !== 'mouse') return; down = true; x0 = e.clientX; s0 = strip.scrollLeft; strip.classList.add('drag'); });
-    addEventListener('pointerup', () => { down = false; strip.classList.remove('drag'); });
-    addEventListener('pointermove', e => { if (down) strip.scrollLeft = s0 - (e.clientX - x0); });
-  }
+  // сцены: замедленные ролики играют, только пока видны
+  const vio = new IntersectionObserver(es => es.forEach(e => {
+    const vd = e.target;
+    if (e.isIntersecting) { if (!vd.src) vd.src = media(vd.dataset.src); vd.play().catch(() => {}); } else vd.pause();
+  }), { threshold: .25 });
+  $$('.scene video').forEach(vd => reduced ? (vd.src = media(vd.dataset.src)) : vio.observe(vd));
+
+  // шапка всегда сверху: на прокрутке получает подложку
+  const top = $('.top');
+  const solid = () => top.classList.toggle('solid', scrollY > 40);
+  addEventListener('scroll', solid, { passive: true }); solid();
 })();
