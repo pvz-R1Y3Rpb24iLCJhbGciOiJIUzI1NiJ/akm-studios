@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="ru" class="lock">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AKM Studios</title>
+<meta name="description" content="AKM Studios — AI Cinema &amp; Music Video Production. Кадры, которые невозможно снять на камеру: режиссура человека, кадры нейросети.">
+<meta name="theme-color" content="#0E0E0F">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="AKM Studios">
+<meta property="og:title" content="AKM Studios — AI Cinema &amp; Music Video Production">
+<meta property="og:description" content="Кадры, которые невозможно снять на камеру.">
+<meta property="og:image" content="https://pvz-r1y3rpb24ilcjhbgcioijiuzi1nij.github.io/akm-studios/v3/media/og.jpg">
+<meta property="og:url" content="https://pvz-r1y3rpb24ilcjhbgcioijiuzi1nij.github.io/akm-studios/v3/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='12' fill='%23F07A4A'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@200;400&family=Onest:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="media/AKM_mask_full.svg">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/v3.css">
+</head>
+<body>
+
+<!-- ИНТРО: нейросеть обучается и собирает логотип из частиц (~10 с) -->
+<div class="neuro" aria-hidden="true">
+  <canvas class="nn"></canvas>
+  <div class="nn-hud">
+    <p class="nn-status" data-nn="status">Инициализация нейросети</p>
+    <dl>
+      <div><dt>эпоха</dt><dd data-nn="epoch">000</dd></div>
+      <div><dt>loss</dt><dd data-nn="loss">2.3026</dd></div>
+      <div><dt>точность</dt><dd data-nn="acc">00.00%</dd></div>
+      <div><dt>параметры</dt><dd data-nn="params">0.0 B</dd></div>
+    </dl>
+    <i class="nn-bar"><b data-nn="bar"></b></i>
+  </div>
+  <button class="nn-skip" type="button">Пропустить</button>
+</div>
+
+<main class="card">
+  <video class="bg" autoplay muted loop playsinline preload="auto" poster="media/poster_card.jpg"
+    data-src-desktop="media/card.mp4" data-src-mobile="media/card_720.mp4" aria-hidden="true"></video>
+  <div class="shade" aria-hidden="true"></div>
+
+  <!-- логотип с роликом внутри букв; от первого движения (или сам) камера влетает в букву K -->
+  <div class="intro" aria-hidden="true">
+    <div class="intro-mask"><img src="media/AKM_mask_full.svg" alt=""></div>
+    <p class="intro-en">AI Cinema &amp; Music Video Production</p>
+    <p class="intro-cue"><span>Листайте</span><i></i></p>
+  </div>
+
+  <header class="top in" style="--d:.1s">
+    <img class="logo" src="media/AKM_site.svg" alt="AKM Studios" width="196" height="22">
+    <nav class="v3-nav"><a href="#work">Сцены</a><a href="#approach">Подход</a><a href="#process">Процесс</a><a href="#contact">Контакты</a></nav>
+  </header>
+
+  <section class="main">
+   <div class="main-text">
+    <h1 class="title">
+      <span class="in" style="--d:.3s">Кадры, которые</span>
+      <span class="in" style="--d:.45s">невозможно снять</span>
+      <span class="in accent" style="--d:.6s">на камеру</span>
+    </h1>
+    <p class="lead in" style="--d:.85s">Режиссура человека, кадры нейросети. Музыкальные клипы и визуал для артистов с постановкой, светом и масштабом большого кино.</p>
+   </div>
+    <div class="ai in" style="--d:1s" aria-hidden="true">
+      <p class="ai-top"><i class="ai-dot"></i>ИИ-генерация · кадр <b data-ai="n">01</b> / 04</p>
+      <p class="ai-name" data-ai="name">Закат над тропой</p>
+      <p class="ai-nums">seed <b data-ai="seed">48213907</b> · итераций <b data-ai="iter">186</b> · дублей <b data-ai="takes">64</b></p>
+    </div>
+  </section>
+
+  <footer class="bottom">
+    <ul class="services in" style="--d:1.05s" aria-label="Что мы делаем">
+      <li>ИИ-клипы</li><li>Лирик-видео</li><li>Обложки</li><li>Тизеры</li><li>Титры</li>
+    </ul>
+    <nav class="contacts in" style="--d:1.2s" aria-label="Связаться">
+      <a class="btn btn-mail" href="#" data-contact="mail" data-placeholder><span class="btn-mail-label">Написать на почту</span><span class="btn-mail-addr" data-mail-addr></span></a>
+      <a class="btn" href="https://www.instagram.com/akm__studios/" data-contact="instagram">Instagram</a>
+      <a class="btn" href="#" data-contact="vk" data-placeholder>ВКонтакте</a>
+      <a class="btn" href="#" data-contact="telegram">Telegram</a>
+    </nav>
+    <p class="copy in" style="--d:1.3s">Листайте вниз — сцены, подход и процесс</p>
+  </footer>
+</main>
+
+<!-- НИЖЕ: блоки версии 2 в тёмном исполнении -->
+<section class="x work" id="work">
+  <div class="x-head"><h2 class="x-h2">Миры, которых нет<br><span class="soft">на съёмочной площадке</span></h2><p class="x-kicker">01 — Сцены</p></div>
+  <ol class="strip" aria-label="Сцены">
+    <li class="frame"><img src="media/frame_01.jpg" alt="Закат над горной тропой" loading="lazy"><p><b>Закат над тропой</b><span>Свет · камера</span></p></li>
+    <li class="frame"><img src="media/frame_02.jpg" alt="Гора в форме медведя" loading="lazy"><p><b>Гора-медведь</b><span>Масштаб · физика</span></p></li>
+    <li class="frame"><img src="media/frame_03.jpg" alt="Маковое поле в солнце" loading="lazy"><p><b>Маковое поле</b><span>Свет · цвет</span></p></li>
+    <li class="frame"><img src="media/frame_04.jpg" alt="Туман в форме медведя над ущельем" loading="lazy"><p><b>Туман, белый как медведь</b><span>Физика · образ</span></p></li>
+    <li class="frame"><img src="media/frame_05.jpg" alt="Бумажный медведь под северным сиянием" loading="lazy"><p><b>Бумажная Арктика</b><span>Стиль · свет</span></p></li>
+    <li class="frame"><img src="media/frame_06.jpg" alt="Бумажные медведи и глобус" loading="lazy"><p><b>Ось мира</b><span>Персонажи · стиль</span></p></li>
+    <li class="frame"><img src="media/frame_07.jpg" alt="Золотая машина земной оси" loading="lazy"><p><b>Машина земной оси</b><span>Ретрофутуризм</span></p></li>
+    <li class="frame"><img src="media/frame_08.jpg" alt="Глаз кита подо льдом" loading="lazy"><p><b>Кит подо льдом</b><span>Масштаб · камера</span></p></li>
+    <li class="frame"><img src="media/frame_09.jpg" alt="Орбитальная станция-кольцо" loading="lazy"><p><b>Орбитальное кольцо</b><span>Миры · масштаб</span></p></li>
+  </ol>
+</section>
+
+<section class="x approach" id="approach">
+  <div class="x-head"><h2 class="x-h2">Сначала история.<br><span class="soft">Потом нейросеть.</span></h2><p class="x-kicker">02 — Подход</p></div>
+  <div class="venn-wrap">
+    <svg class="venn" viewBox="0 0 720 420" role="img" aria-label="Режиссёр и нейросеть, на пересечении AKM Studios">
+      <circle class="c c1" cx="260" cy="210" r="190" pathLength="1"/>
+      <circle class="c c2" cx="460" cy="210" r="190" pathLength="1"/>
+      <text x="105" y="200" class="vt">Режиссёр</text>
+      <text x="105" y="226" class="vs">история · герои · вкус</text>
+      <text x="615" y="200" class="vt" text-anchor="end">Нейросеть</text>
+      <text x="615" y="226" class="vs" text-anchor="end">миры · масштаб · кадр</text>
+      <circle class="dot" cx="360" cy="210" r="7"/>
+      <text x="360" y="246" class="vm" text-anchor="middle">AKM Studios</text>
+    </svg>
+    <ul class="pillars">
+      <li><b>Человек ведёт историю</b><p>Сценарий, герои, ритм и вкус — решения режиссёра. Нейросеть не придумывает клип за нас.</p></li>
+      <li><b>Постановка большого кино</b><p>Свет, камера, композиция и цвет выстраиваются так же, как на съёмочной площадке.</p></li>
+      <li><b>ИИ расширяет кадр</b><p>Северное сияние, кит подо льдом, гора-медведь — то, что невозможно снять, становится возможным.</p></li>
+    </ul>
+  </div>
+</section>
+
+<section class="x process" id="process">
+  <div class="x-head"><h2 class="x-h2">Четыре шага<br><span class="soft">от трека до премьеры</span></h2><p class="x-kicker">03 — Процесс</p></div>
+  <ol class="steps">
+    <li><span>01</span><b>Трек и идея</b><p>Слушаем песню, изучаем артиста, предлагаем историю.</p></li>
+    <li><span>02</span><b>Сценарий и аниматик</b><p>Раскадровка под музыку: весь фильм виден до первого кадра.</p></li>
+    <li><span>03</span><b>Производство кадров</b><p>Герои, миры и липсинк. Сотни ИИ-генераций, в фильм попадают лучшие.</p></li>
+    <li><span>04</span><b>Монтаж и цвет</b><p>Склейки в долю, цветокоррекция, титры, вертикальные версии.</p></li>
+  </ol>
+</section>
+
+<section class="x contact" id="contact">
+  <p class="x-kicker">04 — Контакты</p>
+  <h2 class="x-contact">Расскажите<br><span class="accent">о проекте</span></h2>
+  <div class="contact-row">
+    <a class="btn btn-mail" href="#" data-contact="mail" data-placeholder><span class="btn-mail-label">Написать на почту</span><span class="btn-mail-addr" data-mail-addr></span></a>
+    <a class="btn" href="https://www.instagram.com/akm__studios/" data-contact="instagram">Instagram</a>
+    <a class="btn" href="#" data-contact="vk" data-placeholder>ВКонтакте</a>
+    <a class="btn" href="#" data-contact="telegram">Telegram</a>
+  </div>
+  <div class="x-foot"><img src="media/AKM_site.svg" alt="AKM Studios" width="1066" height="120" loading="lazy"><p><span>© 2026 AKM Studios</span><span>AI Cinema &amp; Music Video Production</span></p></div>
+</section>
+
+<script src="js/main.js"></script>
+</body>
+</html>

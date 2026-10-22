@@ -1,0 +1,111 @@
+/* =====================================================================
+   AKM Studios — версия 3: гибрид версий 1 и 2 + интро «нейросеть собирает логотип»
+   База — css/base.css (визитка версии 1). Здесь — интро, навигация и блоки версии 2 в тёмном исполнении.
+   ===================================================================== */
+html.lock, html.lock body { overflow: hidden; }
+html { scroll-behavior: smooth; overflow-x: clip; }
+html, body { height: auto; }
+body { overflow-x: clip; }
+.soft { color: var(--muted); }
+.accent { color: var(--accent); }
+
+/* ---------- интро: нейросеть ---------- */
+.neuro { position: fixed; inset: 0; z-index: 60; background: var(--bg); transition: opacity 1s var(--ease), visibility 1s; }
+.neuro.done { opacity: 0; visibility: hidden; pointer-events: none; }
+.nn { position: absolute; inset: 0; width: 100%; height: 100%; }
+.nn-hud {
+  position: absolute; left: max(var(--pad), env(safe-area-inset-left)); bottom: max(28px, env(safe-area-inset-bottom));
+  width: min(360px, calc(100% - 2 * var(--pad))); font-size: 12px; letter-spacing: .06em; color: var(--muted);
+  font-variant-numeric: tabular-nums; transition: opacity .6s;
+}
+.nn-status { margin-bottom: 12px; font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--text); }
+.nn-hud dl { display: grid; grid-template-columns: repeat(4, auto); gap: 4px 22px; }
+.nn-hud dt { color: var(--muted); }
+.nn-hud dd { color: var(--text); font-size: 14px; }
+.nn-bar { display: block; height: 1px; margin-top: 14px; background: var(--line); }
+.nn-bar b { display: block; height: 100%; width: 100%; background: var(--accent); transform-origin: left; transform: scaleX(0); }
+.nn-skip {
+  position: absolute; right: max(var(--pad), env(safe-area-inset-right)); bottom: max(28px, env(safe-area-inset-bottom));
+  height: 40px; padding: 0 20px; border: 1px solid var(--line); border-radius: 999px; background: transparent;
+  color: var(--text-2); font: inherit; font-size: 13px; cursor: pointer; transition: border-color .3s, color .3s;
+}
+.nn-skip:hover { border-color: var(--text); color: var(--text); }
+@media (max-width: 600px) { .nn-hud dl { grid-template-columns: repeat(2, auto); } }
+
+/* логотип с роликом показываем только после нейросети */
+.card:not(.logo-on) .intro { visibility: hidden; }
+.card:not(.logo-on) .intro-mask img, .card:not(.logo-on) .intro-en, .card:not(.logo-on) .intro-cue { animation: none; opacity: 0; }
+
+/* ---------- шапка с навигацией ---------- */
+.top { gap: 24px; }
+.v3-nav { display: flex; gap: 30px; font-size: 14px; color: var(--text-2); }
+.v3-nav a { transition: color .3s; }
+.v3-nav a:hover { color: var(--text); }
+@media (max-width: 760px) { .v3-nav { display: none; } }
+
+/* ---------- блоки версии 2 в тёмном исполнении ---------- */
+.x { padding: clamp(90px, 11vw, 170px) var(--pad); border-top: 1px solid rgba(241, 238, 232, .1); }
+.x-head { display: flex; justify-content: space-between; align-items: end; gap: 24px; flex-wrap: wrap; margin-bottom: clamp(36px, 5vw, 64px); }
+.x-kicker { font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.x-h2 { font-family: "Unbounded", "Onest", sans-serif; font-weight: 200; font-size: clamp(30px, 4.2vw, 72px); line-height: 1.06; letter-spacing: -.035em; }
+.reveal { opacity: 0; transform: translateY(28px); transition: opacity 1.1s var(--ease), transform 1.1s var(--ease); }
+.reveal.on { opacity: 1; transform: none; }
+
+.work { padding-right: 0; }
+.work .x-head { padding-right: var(--pad); }
+.strip { display: flex; gap: 18px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 0 var(--pad) 18px 0; scrollbar-width: thin; scrollbar-color: rgba(241, 238, 232, .2) transparent; cursor: grab; }
+.strip.drag { cursor: grabbing; scroll-snap-type: none; }
+.frame { flex: none; width: clamp(260px, 30vw, 460px); scroll-snap-align: start; }
+.frame img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 6px; transition: transform 1s var(--ease); user-select: none; -webkit-user-drag: none; }
+.frame:hover img { transform: scale(1.025); }
+.frame p { display: flex; justify-content: space-between; gap: 12px; margin-top: 14px; font-size: 15px; }
+.frame p span { color: var(--muted); font-size: 13px; text-align: right; }
+
+.venn-wrap { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: clamp(32px, 6vw, 100px); align-items: center; }
+.venn { width: 100%; height: auto; overflow: visible; }
+.venn .c { fill: none; stroke: var(--text); stroke-width: 1.2; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 2.2s var(--ease); }
+.venn .c2 { transition-delay: .35s; }
+.venn.on .c { stroke-dashoffset: 0; }
+.venn text { font-family: "Onest", sans-serif; fill: var(--text); opacity: 0; transition: opacity 1s var(--ease) 1.2s; }
+.venn.on text { opacity: 1; }
+.venn .vt { font-size: 26px; font-weight: 300; }
+.venn .vs { font-size: 14px; fill: var(--muted); }
+.venn .vm { font-size: 15px; font-weight: 500; fill: var(--accent); }
+.venn .dot { fill: var(--accent); transform-origin: 360px 210px; transform: scale(0); transition: transform .9s var(--ease) 1.6s; }
+.venn.on .dot { transform: scale(1); }
+.pillars { display: grid; gap: 28px; }
+.pillars li { padding-top: 22px; border-top: 1px solid rgba(241, 238, 232, .14); }
+.pillars b { font-size: 19px; font-weight: 400; }
+.pillars p { margin-top: 8px; color: var(--text-2); font-size: 16px; }
+@media (max-width: 900px) { .venn-wrap { grid-template-columns: 1fr; } }
+
+.steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1px solid var(--text); }
+.steps li { padding: 26px 24px 0 0; }
+.steps li + li { padding-left: 24px; border-left: 1px solid rgba(241, 238, 232, .14); }
+.steps span { font-size: 13px; color: var(--accent); }
+.steps b { display: block; margin-top: 18px; font-size: clamp(19px, 1.6vw, 24px); font-weight: 400; letter-spacing: -.02em; }
+.steps p { margin-top: 10px; font-size: 15px; color: var(--text-2); }
+@media (max-width: 900px) {
+  .steps { grid-template-columns: 1fr 1fr; }
+  .steps li:nth-child(3) { padding-left: 0; border-left: 0; }
+  .steps li { padding-bottom: 26px; }
+}
+@media (max-width: 520px) {
+  .steps { grid-template-columns: 1fr; }
+  .steps li + li { padding-left: 0; border-left: 0; border-top: 1px solid rgba(241, 238, 232, .14); }
+}
+
+.x-contact { margin-top: 24px; font-family: "Unbounded", "Onest", sans-serif; font-weight: 200; font-size: clamp(40px, 6.4vw, 112px); line-height: 1.02; letter-spacing: -.04em; }
+.x-contact .accent { font-weight: 400; }
+.contact-row { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: clamp(36px, 5vw, 64px); }
+.x-foot { margin-top: clamp(80px, 10vw, 150px); }
+.x-foot img { width: 100%; height: auto; opacity: .92; }
+.x-foot p { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-top: 24px; font-size: 14px; color: var(--muted); }
+@media (max-width: 760px) { .contact-row .btn { flex: 1 1 auto; justify-content: center; } .contact-row .btn-mail { flex-basis: 100%; align-items: center; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .neuro { display: none; }
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .venn .c, .venn text, .venn .dot { transition: none; }
+}
+@media (max-width: 600px) { .nn-skip { top: max(20px, env(safe-area-inset-top)); bottom: auto; } }
