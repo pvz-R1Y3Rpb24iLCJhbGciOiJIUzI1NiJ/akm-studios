@@ -13,20 +13,21 @@ body { overflow-x: clip; }
 .neuro { position: fixed; inset: 0; z-index: 60; background: #000; transition: opacity .5s var(--ease), visibility .5s; }
 .neuro.done { opacity: 0; visibility: hidden; pointer-events: none; }
 .nn { position: absolute; inset: 0; width: 100%; height: 100%; }
-.nn-skip {
-  position: absolute; right: max(var(--pad), env(safe-area-inset-right)); bottom: max(28px, env(safe-area-inset-bottom));
-  height: 40px; padding: 0 20px; border: 1px solid var(--line); border-radius: 999px; background: transparent;
-  color: var(--text-2); font: inherit; font-size: 13px; cursor: pointer; transition: border-color .3s, color .3s;
-}
-.nn-skip:hover { border-color: var(--text); color: var(--text); }
+/* подпись «AI Cinema & Music Video Production»: в оверлее расшифровывается из символов, потом та же подпись у логотипа */
+.nn-cap, .intro-en { font-size: 13px; letter-spacing: .34em; color: rgba(241, 238, 232, .88); }
+.nn-cap { position: absolute; margin: 0; text-align: center; text-transform: uppercase; white-space: nowrap; opacity: 0; font-variant-numeric: tabular-nums; }
+.card.logo-on .intro-en { animation: none; opacity: 1; }
+@media (max-width: 760px) { .nn-cap, .intro-en { font-size: 10.5px; letter-spacing: .22em; } }
 .vox { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; pointer-events: none; }
 .card.go .vox { z-index: -1; }
+.card .bg { animation: none; }   /* видео уже на экране после влёта — лишний масштаб во весь экран только дёргал кадры */
 /* без своего z-index, иначе .intro изолирует наложение и маска не «видит» сцену под собой */
 .intro { z-index: auto; }
 
 /* логотип с роликом показываем только после нейронов — сразу в финальном виде, без своей анимации */
-.card:not(.logo-on) .intro { visibility: hidden; }
-.card:not(.logo-on) .intro-mask img, .card:not(.logo-on) .intro-en, .card:not(.logo-on) .intro-cue { animation: none; opacity: 0; }
+/* маска с логотипом отрисована заранее под чёрным оверлеем — в момент подмены браузеру не нужно её растрировать */
+.card:not(.logo-on) .intro-mask img { animation: none; }
+.card:not(.logo-on) .intro-en, .card:not(.logo-on) .intro-cue { animation: none; opacity: 0; }
 .card.logo-on .intro-mask img { animation: none; }
 .card.logo-on .intro-cue { display: none; }
 
@@ -79,17 +80,15 @@ html:not(.ready) .top { opacity: 0; pointer-events: none; }
 }
 
 .venn-wrap { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: clamp(32px, 6vw, 100px); align-items: center; }
-.venn { width: 100%; height: auto; overflow: visible; }
-.venn .c { fill: none; stroke: var(--text); stroke-width: 1.2; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 2.2s var(--ease); }
-.venn .c2 { transition-delay: .35s; }
-.venn.on .c { stroke-dashoffset: 0; }
+.venn-box { position: relative; }
+.venn-nn { position: absolute; inset: 0; width: 100%; height: 100%; }
+.venn { position: relative; width: 100%; height: auto; overflow: visible; }
+.venn-logo { position: absolute; left: 50%; top: 50%; width: 15.5%; height: auto; transform: translate(-50%, -50%); opacity: 0; transition: opacity .9s var(--ease); }
+.venn-logo.on { opacity: 1; }
 .venn text { font-family: "Onest", sans-serif; fill: var(--text); opacity: 0; transition: opacity 1s var(--ease) 1.2s; }
 .venn.on text { opacity: 1; }
 .venn .vt { font-size: 26px; font-weight: 300; }
 .venn .vs { font-size: 14px; fill: var(--muted); }
-.venn .vm { font-size: 15px; font-weight: 500; fill: var(--accent); }
-.venn .dot { fill: var(--accent); transform-origin: 360px 210px; transform: scale(0); transition: transform .9s var(--ease) 1.6s; }
-.venn.on .dot { transform: scale(1); }
 .pillars { display: grid; gap: 28px; }
 .pillars li { padding-top: 22px; border-top: 1px solid rgba(241, 238, 232, .14); }
 .pillars b { font-size: 19px; font-weight: 400; }
@@ -123,7 +122,6 @@ html:not(.ready) .top { opacity: 0; pointer-events: none; }
 @media (prefers-reduced-motion: reduce) {
   .neuro { display: none; }
   .reveal { opacity: 1; transform: none; transition: none; }
-  .venn .c, .venn text, .venn .dot { transition: none; }
+  .venn text, .venn-logo { transition: none; }
 }
-@media (max-width: 600px) { .nn-skip { top: max(20px, env(safe-area-inset-top)); bottom: auto; } }
 @media (prefers-reduced-motion: reduce) { .scene video { transition: none; } }
