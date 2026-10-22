@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="ru" class="no-js">
+<html lang="ru">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>AKM Studios</title>
-<meta name="description" content="AKM Studios — AI Cinema &amp; Music Video Production. Кадры, которые невозможно снять на камеру: постановка, свет и масштаб большого кино для музыкальных клипов.">
+<meta name="description" content="AKM Studios — AI Cinema &amp; Music Video Production. Кадры, которые невозможно снять на камеру: музыкальные клипы и визуал для артистов.">
 <meta name="theme-color" content="#0E0E0F">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="AKM Studios">
@@ -16,232 +16,45 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='12' fill='%23F07A4A'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@200;300;400;500&family=Onest:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="preload" as="image" href="media/poster_reel.jpg">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@200;400&family=Onest:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="media/poster_card.jpg">
 <link rel="stylesheet" href="css/styles.css">
-<script>document.documentElement.classList.remove('no-js')</script>
 </head>
-<body class="is-loading">
+<body>
 
-<!-- ЗАГРУЗКА: год перетекает от 1895 (первый киносеанс) к 2026 -->
-<div class="loader" aria-hidden="true">
-  <div class="loader-center">
-    <div class="year">
-      <span class="year-col"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>0</span></span>
-      <span class="year-col"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>0</span></span>
-      <span class="year-col"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>0</span></span>
-      <span class="year-col"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>0</span></span>
-    </div>
-    <p class="era" data-era>История кино</p>
-  </div>
-  <div class="loader-line"><i></i></div>
-</div>
+<main class="card">
+  <video class="bg" autoplay muted loop playsinline preload="auto" poster="media/poster_card.jpg"
+    data-src-desktop="media/card.mp4" data-src-mobile="media/card_720.mp4" aria-hidden="true"></video>
+  <div class="shade" aria-hidden="true"></div>
 
-<header class="header">
-  <a href="#top" class="header-logo" aria-label="AKM Studios, наверх"><img src="media/AKM_site.svg" alt="AKM Studios" width="196" height="22"></a>
-  <nav class="nav" aria-label="Разделы">
-    <a href="#scenes">Сцены</a>
-    <a href="#process">Метод</a>
-    <a href="#services">Услуги</a>
-    <a href="#contact">Контакты</a>
-  </nav>
-  <a href="#contact" class="btn btn-sm">Обсудить проект</a>
-</header>
+  <header class="top in" style="--d:.1s">
+    <img class="logo" src="media/AKM_site.svg" alt="AKM Studios" width="196" height="22">
+    <span class="tagline">AI Cinema &amp; Music Video Production</span>
+  </header>
 
-<main id="top">
-
-  <!-- HERO: шоурил внутри логотипа, при скролле камера влетает в букву K -->
-  <section class="hero" aria-label="Шоурил">
-    <div class="hero-media">
-      <video class="hero-video" autoplay muted loop playsinline preload="auto" poster="media/poster_reel.jpg"
-        data-src-desktop="media/reel.mp4" data-src-mobile="media/reel_720.mp4"></video>
-    </div>
-    <div class="intro-mask" aria-hidden="true"><img src="media/AKM_mask_full.svg" alt=""></div>
-    <p class="intro-en" aria-hidden="true">AI Cinema &amp; Music Video Production</p>
-    <a class="scroll-cue" href="#scenes"><span>Листайте</span><i aria-hidden="true"></i></a>
-
-    <div class="hero-inner">
-      <h1 class="hero-title display" data-reveal="hero">
-        <span class="line"><span>Кадры, которые</span></span>
-        <span class="line"><span>невозможно снять</span></span>
-        <span class="line"><span><b>на камеру</b></span></span>
-      </h1>
-      <div class="hero-side">
-        <p class="hero-sub">Музыкальные клипы и визуал для артистов. Постановка, свет и масштаб большого кино.</p>
-        <a href="#contact" class="btn">Обсудить проект</a>
-      </div>
-    </div>
-    <p class="hero-meta" aria-hidden="true"><span data-roll="gen">GEN 0000</span><span data-roll="seed">SEED 00000000</span><span>24 FPS</span><span>117.5 BPM</span></p>
+  <section class="main">
+    <h1 class="title">
+      <span class="in" style="--d:.3s">Кадры, которые</span>
+      <span class="in" style="--d:.45s">невозможно снять</span>
+      <span class="in accent" style="--d:.6s">на камеру</span>
+    </h1>
+    <p class="lead in" style="--d:.85s">Музыкальные клипы и визуал для артистов. Постановка, свет и масштаб большого кино.</p>
   </section>
 
-  <!-- MANIFEST -->
-  <section class="section manifest" aria-label="О студии">
-    <p class="label">Студия</p>
-    <h2 class="mf-lead display" data-reveal>
-      <span class="line"><span>Мы строим миры,</span></span>
-      <span class="line"><span>куда не доберётся</span></span>
-      <span class="line"><span><b>ни одна съёмочная группа.</b></span></span>
-    </h2>
-    <ol class="mf-list">
-      <li class="mf-row"><span class="mf-big">Северное сияние</span><span class="mf-small">над павильоном шестидесятых</span></li>
-      <li class="mf-row"><span class="mf-big">Медведи</span><span class="mf-small">раскручивают земную ось</span></li>
-      <li class="mf-row"><span class="mf-big">Кит подо льдом</span><span class="mf-small">и монорельс над ним</span></li>
-    </ol>
-    <div class="mf-close">
-      <p class="mf-close-small fade">Каждый кадр поставлен так, будто на него выделили</p>
-      <p class="mf-close-big display" data-reveal><span class="line"><span><b>бюджет блокбастера</b></span></span></p>
-    </div>
-    <div class="manifest-foot">
-      <p class="fade">Режиссура, художественная постановка, свет, камера и цвет. Каждая сцена проходит полный цикл большого кино и доводится до последнего кадра.</p>
-      <p class="fade">Для артистов, лейблов и культурных институций, которым нужен визуал, о котором говорят после премьеры.</p>
-    </div>
-  </section>
-
-  <!-- SCENES: сделано AKM Studios -->
-  <section class="section scenes-intro" id="scenes">
-    <p class="label">01 — Сцены</p>
-    <h2 class="section-title display" data-reveal>
-      <span class="line"><span>Сделано</span></span>
-      <span class="line"><span><b>AKM Studios</b></span></span>
-    </h2>
-    <p class="scenes-lead fade">Четыре сцены из одного клипа. Каждая — отдельный фильм со своими героями, светом и партитурой.</p>
-  </section>
-
-  <section class="scenes" aria-label="Сцены">
-    <div class="scenes-stage">
-      <div class="scene-media">
-        <video muted loop playsinline preload="none" data-src="media/sc_pavilion.mp4"></video>
-        <video muted loop playsinline preload="none" data-src="media/sc_machine.mp4"></video>
-        <video muted loop playsinline preload="none" data-src="media/sc_whale.mp4"></video>
-        <video muted loop playsinline preload="none" data-src="media/sc_fog.mp4"></video>
-      </div>
-      <div class="scenes-shade" aria-hidden="true"></div>
-      <div class="scene-texts">
-        <article class="scene-text" data-tags="Персонажи · Свет · Камера · Физика снега">
-          <span class="scene-num">01 / 04</span>
-          <h3>Павильон «Северный полюс»</h3>
-          <p>Съёмочный павильон шестидесятых, внутри построен настоящий Северный полюс. Софиты, сияние на заднике, иней на земной оси и два медведя в вязаных свитерах, которые её раскручивают.</p>
-        </article>
-        <article class="scene-text" data-tags="Персонажи · Свет · Цвет · Ретрофутуризм">
-          <span class="scene-num">02 / 04</span>
-          <h3>Машина земной оси</h3>
-          <p>Ротонда посреди льдов, а внутри золотая машина, которая вращает планету: латунь, манометры, рычаги и медведи-механики в скафандрах за пультом.</p>
-        </article>
-        <article class="scene-text" data-tags="Камера · Масштаб · Персонажи">
-          <span class="scene-num">03 / 04</span>
-          <h3>Кит подо льдом</h3>
-          <p>Глаз кита в толще воды, медленный проход камеры вдоль кожи и медведи в окне вагона над ним. Масштаб, для которого площадке понадобились бы подводная группа и целый сезон.</p>
-        </article>
-        <article class="scene-text" data-tags="Физика · Свет · Камера">
-          <span class="scene-num">04 / 04</span>
-          <h3>Туман, белый как медведь</h3>
-          <p>Строчка песни, ставшая кадром: туман над ущельем складывается в фигуру медведя и растворяется в воздухе.</p>
-        </article>
-      </div>
-      <p class="scene-tags" data-scene-tags aria-hidden="true"></p>
-      <div class="scene-dots" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
-    </div>
-  </section>
-
-
-  <!-- PROCESS -->
-  <section class="section" id="process">
-    <div class="process">
-      <div class="process-head">
-        <p class="label">02 — Метод</p>
-        <h2 class="section-title display" data-reveal>
-          <span class="line"><span>Как рождается</span></span>
-          <span class="line"><span><b>клип</b></span></span>
-        </h2>
-        <p class="process-lead">Пять этапов. На каждом вы утверждаете результат, прежде чем мы идём дальше.</p>
-      </div>
-      <ol class="steps">
-        <li class="step"><span class="step-num">01</span><div><h3>Погружение в трек</h3><p>Изучаем песню, артиста и его аудиторию. Размечаем трек по долям, частям и акцентам.</p></div></li>
-        <li class="step"><span class="step-num">02</span><div><h3>Сценарий и аниматик</h3><p>История по эпизодам и раскадровка под музыку. Весь фильм виден до первого кадра.</p></div></li>
-        <li class="step"><span class="step-num">03</span><div><h3>Герои и миры</h3><p>Лица, костюмы, локации и свет. Утверждённые эталоны держат героя неизменным в каждом плане.</p></div></li>
-        <li class="step"><span class="step-num">04</span><div><h3>Производство сцен</h3><p>Каждая сцена проходит десятки итераций, пока не встанет каждый кадр. Синхрон губ с вокалом в крупных планах.</p></div></li>
-        <li class="step"><span class="step-num">05</span><div><h3>Монтаж, цвет, финал</h3><p>Склейки в долю, цветокоррекция, титры, обложки и вертикальные версии для площадок.</p></div></li>
-      </ol>
-    </div>
-  </section>
-
-  <!-- SERVICES -->
-  <section class="section services-sec" id="services">
-    <p class="label">03 — Услуги</p>
-    <h2 class="section-title display" data-reveal><span class="line"><span>Что мы <b>делаем</b></span></span></h2>
-    <div class="svc">
-      <ul class="svc-list">
-        <li class="svc-item"><h3>Музыкальные клипы</h3><p>Сюжет, герои, липсинк и полный цикл постпродакшна.</p></li>
-        <li class="svc-item"><h3>Лирик-видео</h3><p>Слова песни становятся частью изображения.</p></li>
-        <li class="svc-item"><h3>Обложки и превью</h3><p>Ключевые кадры релиза для площадок и YouTube.</p></li>
-        <li class="svc-item"><h3>Тизеры</h3><p>Вертикальные версии для Shorts, TikTok и VK Клипов.</p></li>
-        <li class="svc-item"><h3>Титры и заставки</h3><p>Финальные титры с логотипами партнёров и фондов.</p></li>
-      </ul>
-    </div>
-  </section>
-
-  <!-- NUMBERS -->
-  <section class="section numbers-sec" aria-label="Один клип в цифрах">
-    <p class="label">Один клип в цифрах</p>
-    <div class="numbers">
-      <div class="num"><div class="num-val"><span data-to="9">9</span></div><p class="num-label">эпизодов, от Арктики до ретрофутуризма</p></div>
-      <div class="num"><div class="num-val"><span data-to="80">80</span>+</div><p class="num-label">монтажных планов</p></div>
-      <div class="num"><div class="num-val"><span data-to="15">15</span></div><p class="num-label">планов с синхроном губ</p></div>
-      <div class="num"><div class="num-val">2:<span data-to="32" data-pad="2">32</span></div><p class="num-label">хронометраж</p></div>
-    </div>
-  </section>
-
-  <!-- CONTACT -->
-  <section class="section" id="contact">
-    <div class="contact">
-      <div>
-        <p class="label">04 — Контакты</p>
-        <h2 class="contact-title display" data-reveal>
-          <span class="line"><span>Расскажите</span></span>
-          <span class="line"><span><b>о проекте</b></span></span>
-        </h2>
-        <div class="contact-links">
-          <!-- ссылки задаются в js/main.js, блок AKM_CONFIG -->
-          <a class="contact-link" href="#" data-contact="telegram">Telegram <span aria-hidden="true">↗</span></a>
-          <a class="contact-link" href="#" data-contact="vk">ВКонтакте <span aria-hidden="true">↗</span></a>
-          <a class="contact-link" href="#" data-contact="mail">Почта <span aria-hidden="true">↗</span></a>
-        </div>
-      </div>
-      <form class="form" novalidate>
-        <div class="field half"><input id="f-name" name="name" placeholder=" " autocomplete="name" required><label for="f-name">Имя</label></div>
-        <div class="field half"><input id="f-artist" name="artist" placeholder=" "><label for="f-artist">Артист / проект</label></div>
-        <div class="field"><input id="f-contact" name="contact" placeholder=" " required><label for="f-contact">Telegram, ВК или почта</label></div>
-        <p class="chips-label" id="f-format-label">Что нужно</p>
-        <div class="chips" role="group" aria-labelledby="f-format-label">
-          <label class="chip"><input type="checkbox" id="f-fmt-clip" name="format" value="клип"><span>Клип</span></label>
-          <label class="chip"><input type="checkbox" id="f-fmt-lyric" name="format" value="лирик-видео"><span>Лирик-видео</span></label>
-          <label class="chip"><input type="checkbox" id="f-fmt-teaser" name="format" value="тизеры"><span>Тизеры</span></label>
-          <label class="chip"><input type="checkbox" id="f-fmt-cover" name="format" value="обложки"><span>Обложки</span></label>
-          <label class="chip"><input type="checkbox" id="f-fmt-titles" name="format" value="титры"><span>Титры</span></label>
-        </div>
-        <div class="field"><input id="f-release" name="release" placeholder=" "><label for="f-release">Дата релиза, если известна</label></div>
-        <div class="form-submit">
-          <button class="btn" type="submit">Отправить</button>
-          <span class="form-note">Нажимая кнопку, вы соглашаетесь на обработку контактов для ответа на заявку.</span>
-        </div>
-        <div class="form-done" role="status"><p class="display">Спасибо.<br><b>Мы свяжемся с вами.</b></p></div>
-      </form>
-    </div>
-  </section>
+  <footer class="bottom">
+    <ul class="services in" style="--d:1.05s" aria-label="Что мы делаем">
+      <li>Клипы</li><li>Лирик-видео</li><li>Обложки</li><li>Тизеры</li><li>Титры</li>
+    </ul>
+    <nav class="contacts in" style="--d:1.2s" aria-label="Связаться">
+      <!-- ссылки задаются в js/main.js, блок AKM_CONFIG -->
+      <a class="btn btn-primary" href="#" data-contact="telegram">Telegram</a>
+      <a class="btn" href="#" data-contact="vk">ВКонтакте</a>
+      <a class="btn" href="#" data-contact="mail">Почта</a>
+    </nav>
+    <p class="copy in" style="--d:1.3s">© 2026 AKM Studios</p>
+  </footer>
 </main>
 
-<footer class="footer">
-  <div class="footer-logo"><img src="media/AKM_site.svg" alt="AKM Studios" width="1066" height="120" loading="lazy"></div>
-  <div class="footer-bottom">
-    <span>© 2026 AKM Studios</span>
-    <nav aria-label="Соцсети"><a href="#" data-contact="telegram">Telegram</a><a href="#" data-contact="vk">ВКонтакте</a><a href="#" data-contact="youtube">YouTube</a></nav>
-    <a href="#top">Наверх ↑</a>
-  </div>
-</footer>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>
