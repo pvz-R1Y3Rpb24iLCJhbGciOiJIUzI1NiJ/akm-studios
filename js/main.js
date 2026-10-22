@@ -4,19 +4,25 @@
    ===================================================================== */
 
 /* ---------- НАСТРОЙКИ ДЛЯ ЗАКАЗЧИКА ----------
-   Впишите ссылки — кнопки с пустой ссылкой на сайте не показываются. */
+   Впишите ссылки. Почта и ВКонтакте пока заглушки: кнопки видны, но не кликаются.
+   Остальные кнопки с пустой ссылкой на сайте не показываются. */
 const AKM_CONFIG = {
   instagram: 'https://www.instagram.com/akm__studios/',
   telegram: '',   // пока неактивен; например 'https://t.me/akmstudios'
-  vk: '',         // пока неактивен; например 'https://vk.com/akmstudios'
-  mail: '',       // например 'mailto:hello@akmstudios.ru'
+  vk: '',         // заглушка; например 'https://vk.com/akmstudios'
+  mail: '',       // заглушка, главная кнопка; например 'mailto:hello@akmstudios.ru'
 };
 
 (() => {
   /* ссылки на контакты */
   document.querySelectorAll('[data-contact]').forEach(a => {
     const url = AKM_CONFIG[a.dataset.contact];
-    if (url) { a.href = url; if (/^https?:/.test(url)) { a.target = '_blank'; a.rel = 'noopener'; } }
+    if (url) {
+      a.href = url;
+      if (/^https?:/.test(url)) { a.target = '_blank'; a.rel = 'noopener'; }
+      const addr = a.querySelector('[data-mail-addr]'); if (addr) addr.textContent = url.replace(/^mailto:/, '');
+    }
+    else if ('placeholder' in a.dataset) { a.setAttribute('aria-disabled', 'true'); a.addEventListener('click', e => e.preventDefault()); } // заглушка: видна, но пока не ведёт никуда
     else a.remove(); // ссылки нет — кнопку не показываем
   });
 

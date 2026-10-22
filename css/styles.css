@@ -123,3 +123,18 @@ ul { list-style: none; }
 }
 @media (prefers-reduced-motion: reduce) { .ai-dot, .intro-cue i::after { animation: none; } }
 .card:not(.go) .bg { animation: none; }
+
+/* ---------- почта — главная кнопка связи ---------- */
+.contacts { align-items: center; }
+.btn-mail {
+  height: auto; padding: 14px 30px; flex-direction: column; align-items: flex-start; justify-content: center; gap: 2px;
+  background: var(--accent); color: var(--ink); border-color: var(--accent); font-weight: 500;
+}
+.btn-mail:hover { background: var(--text); border-color: var(--text); }
+.btn-mail-label { font-size: 17px; line-height: 1.2; }
+.btn-mail-addr { font-size: 13px; font-weight: 400; opacity: .75; }
+.btn-mail-addr:empty { display: none; }
+@media (max-width: 760px) {
+  .btn-mail { flex: 1 1 100%; align-items: center; }
+}
+.services { gap: 6px 26px; } .services li + li::before { content: none; }
