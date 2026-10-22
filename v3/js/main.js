@@ -22,6 +22,31 @@ const AKM_CONFIG = {
   const mobile = innerWidth < 760;
   const root = document.documentElement;
 
+  // «расшифровка» текста: символы проступают из кода слева направо (вложенная разметка сохраняется)
+  const GL = '01<>/[]{}=+*#ABCDEF0123456789';
+  const decode = (el, ms = 900) => {
+    if (reduced || !el) return;
+    const parts = [], walk = n => n.nodeType === 3 ? (n.textContent.trim() && parts.push([n, n.textContent])) : n.childNodes.forEach(walk);
+    walk(el);
+    const total = parts.reduce((a, [, x]) => a + x.length, 0), s0 = performance.now();
+    let last = 0;
+    const step = now => {
+      const k = Math.min(1, (now - s0) / ms);
+      if (now - last > 40 || k === 1) {
+        last = now;
+        let left = Math.floor(k * total);
+        parts.forEach(([n, x]) => {
+          const keep = Math.max(0, Math.min(x.length, left)); left -= x.length;
+          let out = x.slice(0, keep);
+          for (let i = keep; i < x.length; i++) out += /\s/.test(x[i]) ? x[i] : GL[Math.random() * GL.length | 0];
+          n.textContent = out;
+        });
+      }
+      if (k < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  };
+
   /* ---------- контакты ---------- */
   $$('[data-contact]').forEach(a => {
     const url = AKM_CONFIG[a.dataset.contact];
@@ -141,11 +166,13 @@ const AKM_CONFIG = {
     const cv = $('.nn', neuro), ctx = cv.getContext('2d'), cap = $('.nn-cap', neuro);
     const T_MIX = 3000, T_END = 3500;   // мс: частицы на местах → в точках проступает кадр → логотип с роликом
     const QS = new URLSearchParams(location.search), T_OFF = +(QS.get('nnt') || 0), HOLD = QS.has('nnhold'); // для проверки: ?nnt=2000 — со 2-й секунды, &nnhold — замереть
-    const INK = '241,238,232', GLYPHS = '01<>/[]{}=+*#ABCDEF0123456789';
+    const INK = '241,238,232', GREY = '168,172,176', WEB = '196,200,204', GLYPHS = '01<>/[]{}=+*#ABCDEF0123456789';
+    const MONO = '10px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace';
     const rnd = (a, b) => a + Math.random() * (b - a);
     const clamp = x => x < 0 ? 0 : x > 1 ? 1 : x;
     let W = 0, Hh = 0, dpr = 1, segs = [], paths = [], somas = [], parts = [], pulses = [], rain = [], labels = [];
-    let t0 = 0, raf = 0, ended = false, dot = 2, drawn = 0, capT = 0;
+    let t0 = 0, raf = 0, ended = false, dot = 2, drawn = 0, capT = 0, matT = 0, locks = [], mats = [];
+    const hud = document.createElement('canvas'), hc = hud.getContext('2d');   // сетка координат — рисуется один раз
     const web = document.createElement('canvas'), wc = web.getContext('2d');   // ткань дорисовывается по мере роста
     const L = document.createElement('canvas'), lc = L.getContext('2d');       // сцена точками, вырезанная по буквам
     let mr = null;
@@ -170,13 +197,13 @@ const AKM_CONFIG = {
       const N = mobile ? 24 : 54;
       for (let i = 0; i < N; i++) {
         const near = Math.random() < .3;   // ближний план крупнее и ярче, дальний — тонкий и тусклый
-        const s = { x: rnd(-.05, 1.05) * W, y: rnd(-.05, 1.05) * Hh, r: near ? rnd(3.5, 6.5) : rnd(1.4, 3), al: near ? rnd(.45, .75) : rnd(.12, .3), t: rnd(0, 650) };
+        const s = { x: rnd(-.05, 1.05) * W, y: rnd(-.05, 1.05) * Hh, r: near ? rnd(3.5, 6.5) : rnd(1.4, 3), al: near ? rnd(.26, .42) : rnd(.06, .16), t: rnd(0, 650) };
         somas.push(s);
         for (let d = 3 + (Math.random() * 4 | 0); d > 0; d--) branch(s.x, s.y, rnd(0, 6.283), s.r * .55, (mobile ? 22 : 32) + (Math.random() * 28 | 0), s.t, 0, s.al);
       }
       for (let i = 0; i < (mobile ? 3 : 6); i++) {
         let x = Math.random() < .5 ? -20 : W + 20, y = rnd(.1, .9) * Hh, a = x < 0 ? rnd(-.35, .35) : Math.PI + rnd(-.35, .35);
-        const al = rnd(.25, .55), w0 = rnd(1.3, 3), t = rnd(100, 550), pts = [[x, y]];
+        const al = rnd(.14, .3), w0 = rnd(1.3, 3), t = rnd(100, 550), pts = [[x, y]];
         for (let k = 0; k < 400 && x > -40 && x < W + 40 && y > -40 && y < Hh + 40; k++) {
           a += rnd(-.12, .12);
           const nx = x + Math.cos(a) * 8, ny = y + Math.sin(a) * 8;
@@ -205,8 +232,24 @@ const AKM_CONFIG = {
       // подписи данных у тел клеток: проявляются, «расшифровываясь» из символов
       const TXT = ['[512×768×3]', 'tensor<fp16>', '0x7F3A·91C2', 'w = 0.8137', 'Δ loss 0.0021', 'latent 64×64×4', 'seed 48213907',
         'attn · 32 heads', 'kv-cache 8192', '4.2M tokens', '01101011 10010110', 'σ(Wx + b)', 'frames 24/s', 'batch 256'];
-      labels = somas.filter(s => s.al > .4 && s.x > 30 && s.x < W - 170 && s.y > 60 && s.y < Hh - 40)
+      labels = somas.filter(s => s.al > .25 && s.x > 30 && s.x < W - 170 && s.y > 60 && s.y < Hh - 40)
         .slice(0, mobile ? 4 : 11).map((s, i) => ({ s, txt: TXT[i % TXT.length], t: s.t + rnd(250, 700), dx: rnd(20, 40), dy: -rnd(14, 30) }));
+
+      // технические фрагменты: сетка координат с засечками, захваты целей, матрицы весов
+      hud.width = cv.width; hud.height = cv.height; hc.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const step = mobile ? 90 : 120;
+      hc.strokeStyle = `rgba(${GREY},.08)`; hc.lineWidth = 1; hc.setLineDash([1, 5]); hc.beginPath();
+      for (let x = step; x < W; x += step) { hc.moveTo(x + .5, 0); hc.lineTo(x + .5, Hh); }
+      for (let y = step; y < Hh; y += step) { hc.moveTo(0, y + .5); hc.lineTo(W, y + .5); }
+      hc.stroke(); hc.setLineDash([]);
+      hc.font = MONO; hc.textBaseline = 'top'; hc.fillStyle = `rgba(${GREY},.4)`;
+      for (let x = step; x < W; x += step) { hc.fillRect(x, 0, 1, 5); if (!mobile) hc.fillText(String(x).padStart(4, '0'), x + 4, 6); }
+      for (let y = step; y < Hh; y += step) { hc.fillRect(0, y, 5, 1); hc.fillText(String(y).padStart(4, '0'), 8, y + 4); }
+      hc.fillStyle = `rgba(${GREY},.3)`;
+      for (let x = step; x < W; x += step) for (let y = step; y < Hh; y += step) { hc.fillRect(x - 3, y, 7, 1); hc.fillRect(x, y - 3, 1, 7); }
+      locks = somas.filter(s => s.x > 70 && s.x < W - 160 && s.y > 90 && s.y < Hh - 90 && Math.abs(s.y - Hh / 2) > 70)
+        .slice(0, mobile ? 3 : 7).map(s => ({ s, t: rnd(350, 1700), id: 'N-' + (Math.random() * 9000 + 1000 | 0), p: rnd(.9, .999).toFixed(3) }));
+      mats = (mobile ? [[16, Hh - 150]] : [[W - 200, 96], [24, Hh - 170]]).map(([x, y]) => ({ x, y, v: [] }));
     };
 
     const scramble = (txt, k) => {
@@ -225,15 +268,15 @@ const AKM_CONFIG = {
           (b.get(k) || b.set(k, []).get(k)).push(s);
         }
         b.forEach((list, k) => {
-          wc.lineWidth = Math.max(.5, (k >> 4) / 3); wc.strokeStyle = `rgba(${INK},${(k & 15) / 10})`;
+          wc.lineWidth = Math.max(.5, (k >> 4) / 3); wc.strokeStyle = `rgba(${WEB},${(k & 15) / 10})`;
           wc.beginPath(); list.forEach(s => { wc.moveTo(s.x, s.y); wc.lineTo(s.nx, s.ny); }); wc.stroke();
         });
       }
       somas.forEach(s => {
         if (s.done || s.t > t) return;
         s.done = 1;
-        wc.fillStyle = `rgba(${INK},${s.al * .12})`; wc.beginPath(); wc.arc(s.x, s.y, s.r * 2.6, 0, 6.283); wc.fill();
-        wc.fillStyle = `rgba(${INK},${s.al})`; wc.beginPath(); wc.arc(s.x, s.y, s.r, 0, 6.283); wc.fill();
+        wc.fillStyle = `rgba(${WEB},${s.al * .12})`; wc.beginPath(); wc.arc(s.x, s.y, s.r * 2.6, 0, 6.283); wc.fill();
+        wc.fillStyle = `rgba(${WEB},${s.al + .1})`; wc.beginPath(); wc.arc(s.x, s.y, s.r, 0, 6.283); wc.fill();
       });
     };
 
@@ -276,6 +319,57 @@ const AKM_CONFIG = {
         for (let yy = y; yy < Hh; yy += c.h) ctx.drawImage(c.s, c.x, yy, 14, c.h);
       });
       ctx.globalAlpha = 1;
+
+      // 1б) технические фрагменты поверх: сетка, скан-линия, захваты целей, матрицы, графики, служебные строки
+      const fTech = clamp(t / 400) * (1 - clamp((t - 2500) / 600));
+      if (fTech > 0) {
+        ctx.globalAlpha = fTech; ctx.drawImage(hud, 0, 0, W, Hh);
+        ctx.font = MONO; ctx.textBaseline = 'top'; ctx.lineWidth = 1;
+        const sx = (t % 1800) / 1800 * W;
+        ctx.fillStyle = `rgba(${GREY},.16)`; ctx.fillRect(sx, 0, 1, Hh);
+        ctx.fillStyle = `rgba(${GREY},.6)`; ctx.fillText('x ' + String(sx | 0).padStart(4, '0'), sx + 5, 22);
+        locks.forEach(l => {
+          const k = clamp((t - l.t) / 380);
+          if (!k) return;
+          const r = 30 - 16 * ease(k), { x, y } = l.s;
+          ctx.strokeStyle = k < 1 ? `rgba(${GREY},.7)` : 'rgba(240,122,74,.8)'; ctx.beginPath();
+          [[-1, -1], [1, -1], [1, 1], [-1, 1]].forEach(([dx, dy]) => { const cx = x + dx * r, cy = y + dy * r; ctx.moveTo(cx, cy - dy * 5); ctx.lineTo(cx, cy); ctx.lineTo(cx - dx * 5, cy); });
+          ctx.stroke();
+          if (k === 1) { ctx.fillStyle = `rgba(${GREY},.8)`; ctx.fillText(l.id + ' · ' + l.p, x + r + 6, y - r); }
+        });
+        if (now - matT > 110) {
+          matT = now;
+          mats.forEach(m => { m.v = [...Array(5)].map(() => [...Array(4)].map(() => { const v = Math.random() * 2 - 1; return (v < 0 ? '-' : ' ') + Math.abs(v).toFixed(2).slice(1); }).join('  ')); });
+        }
+        ctx.fillStyle = `rgba(${GREY},.55)`;
+        mats.forEach((m, i) => {
+          ctx.fillText(`W${i + 1} · layer ${12 + i * 7} · 4×5`, m.x, m.y);
+          m.v.forEach((row, j) => ctx.fillText(row, m.x + 6, m.y + 16 + j * 12));
+          ctx.fillRect(m.x, m.y + 14, 1, 62); ctx.fillRect(m.x, m.y + 14, 4, 1); ctx.fillRect(m.x, m.y + 75, 4, 1);
+        });
+        const tc = Math.floor(t / 1000 * 24);
+        ctx.fillText('AKM · NEURAL RENDER', 24, mobile ? 64 : 30); ctx.fillText(`PASS ${String(1 + (t / 500 | 0)).padStart(2, '0')} / 07 · SAMPLES 4096 · FP16`, 24, mobile ? 78 : 44);
+        if (!mobile) {
+          ctx.textAlign = 'right';
+          ctx.fillText(`TC 00:00:${String(tc / 24 | 0).padStart(2, '0')}:${String(tc % 24).padStart(2, '0')}`, W - 24, 30);
+          ctx.fillText('24.000 FPS · 2.39:1', W - 24, 44); ctx.textAlign = 'left';
+          // гистограмма активаций
+          const hx = W - 270, hb = Hh - 34;
+          ctx.fillText('activations', hx, hb - 58);
+          for (let i = 0; i < 36; i++) {
+            const h = 6 + 38 * Math.abs(Math.sin(t / 260 + i * .7) * Math.sin(i * 1.7 + t / 900));
+            ctx.fillRect(hx + i * 7, hb - h, 4, h);
+          }
+          ctx.fillRect(hx, hb + 3, 250, 1);
+          // осциллограмма сигнала
+          const wx = 200, wb = Hh - 54;
+          ctx.fillText('signal · 48 kHz', wx, wb - 32);
+          ctx.strokeStyle = `rgba(${GREY},.55)`; ctx.beginPath();
+          for (let i = 0; i <= 160; i++) { const y = wb + Math.sin(i * .19 + t / 110) * 12 * Math.sin(i * .035 + t / 600); i ? ctx.lineTo(wx + i * 1.8, y) : ctx.moveTo(wx, y); }
+          ctx.stroke();
+        }
+        ctx.globalAlpha = 1;
+      }
 
       // 2) ткань нейронов растёт, по ней бегут сигналы; когда частицы срываются — ткань гаснет
       growWeb(t);
@@ -322,7 +416,7 @@ const AKM_CONFIG = {
           const x = u * u * p.sx + 2 * u * e * p.cx + e * e * p.tx, y = u * u * p.sy + 2 * u * e * p.cy + e * e * p.ty;
           if (k < 1) P[p.g].rect(x - sF / 2, y - sF / 2, sF, sF); else P[3 + p.g].rect(x - sS / 2, y - sS / 2, sS, sS);
         });
-        const lv = [.55, .8, 1];
+        const lv = [.32, .52, .78];
         for (let i = 0; i < 6; i++) { ctx.fillStyle = `rgba(${INK},${lv[i % 3] * (1 - mix)})`; ctx.fill(P[i]); }
       }
 
@@ -382,10 +476,10 @@ const AKM_CONFIG = {
 
   /* ---------- ИИ-строка (как в версии 1) ---------- */
   const SHOTS = [
-    { t: 0, name: 'Золотой час', seed: 48213907, iter: 186, takes: 64 },
-    { t: 2.62, name: 'Орбита', seed: 73920184, iter: 214, takes: 41 },
-    { t: 4.82, name: 'Алое поле', seed: 15887302, iter: 162, takes: 37 },
-    { t: 7.36, name: 'Белый зверь', seed: 90461178, iter: 248, takes: 52 },
+    { t: 0, name: 'Орбита', seed: 48213907, iter: 186, takes: 64 },
+    { t: 2.8, name: 'Бумажный кит', seed: 73920184, iter: 214, takes: 41 },
+    { t: 5.05, name: 'Алое поле', seed: 15887302, iter: 162, takes: 37 },
+    { t: 7.59, name: 'Созвездие', seed: 90461178, iter: 248, takes: 52 },
   ];
   const el = k => card.querySelector(`[data-ai="${k}"]`);
   const nEl = el('n'), nameEl = el('name'), seedEl = el('seed'), iterEl = el('iter'), takesEl = el('takes');
@@ -401,8 +495,7 @@ const AKM_CONFIG = {
       SHOTS.forEach((s, k) => { if (t >= s.t) i = k; });
       if (i !== shot) {
         shot = i; const s = SHOTS[i];
-        nEl.textContent = '0' + (i + 1); nameEl.style.opacity = 0;
-        setTimeout(() => { nameEl.textContent = s.name; nameEl.style.opacity = 1; }, 250);
+        nEl.textContent = '0' + (i + 1); nameEl.textContent = s.name; decode(nameEl, 700);
         seedEl.textContent = s.seed; countUp(iterEl, s.iter); countUp(takesEl, s.takes, 700);
       }
       requestAnimationFrame(watch);
@@ -511,13 +604,25 @@ const AKM_CONFIG = {
     addEventListener('resize', () => { if (ready) { const tt = t0; build().then(() => { t0 = tt; start(); }); } });
   }
 
-  /* ---------- блоки ниже: появление и плёнка ---------- */
-  const targets = [...$$('.x-head, .scene, .pillars li, .steps li, .x-contact, .contact-row, .x-foot'), $('.venn')].filter(Boolean);
+  /* ---------- блоки ниже: нейро-появление ----------
+     крупное (заголовки, ролики, абзацы) проявляется точками-«нейронами» волной слева направо,
+     мелкие подписи расшифровываются из символов, по линиям пробегает сигнал */
+  const NX = '.x-h2, .scene-v, .scene p, .pillars li, .steps li, .x-contact, .contact-row, .x-foot img';
+  const DEC = '.x-kicker, .x-note, .scene-t b, .scene-tag, .pillars b, .steps b, .x-foot p span';
+  const nxEls = $$(NX), decEls = $$(DEC), venn = $('.venn');
   if (!reduced) {
-    targets.forEach(t => { if (!t.classList.contains('venn')) t.classList.add('reveal'); });
-    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('on'); io.unobserve(e.target); } }), { threshold: .2 });
-    targets.forEach(t => io.observe(t));
-  } else targets.forEach(t => t.classList.add('on'));
+    nxEls.forEach(t => t.classList.add('nx'));
+    const io = new IntersectionObserver(es => es.forEach(e => {
+      if (!e.isIntersecting) return;
+      const el = e.target; io.unobserve(el);
+      if (el.classList.contains('nx')) { el.classList.add('on'); setTimeout(() => el.classList.add('nx-done'), 2100); }
+      else if (el === venn) el.classList.add('on');
+      else decode(el, 800 + el.textContent.length * 12);
+    }), { threshold: .2 });
+    [...nxEls, ...decEls, venn].filter(Boolean).forEach(t => io.observe(t));
+    // герой после влёта: маска точек снимается, когда проявление закончилось
+    $$('.card .in').forEach(el => el.addEventListener('animationend', () => el.classList.add('nx-done'), { once: true }));
+  } else venn && venn.classList.add('on');
   // сцены: замедленные ролики играют, только пока видны
   const vio = new IntersectionObserver(es => es.forEach(e => {
     const vd = e.target;
