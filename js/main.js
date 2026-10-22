@@ -4,10 +4,11 @@
    ===================================================================== */
 
 /* ---------- НАСТРОЙКИ ДЛЯ ЗАКАЗЧИКА ----------
-   Впишите ссылки — пустые кнопки на сайте не кликаются. */
+   Впишите ссылки — кнопки с пустой ссылкой на сайте не показываются. */
 const AKM_CONFIG = {
-  telegram: '',   // например 'https://t.me/akmstudios'
-  vk: '',         // например 'https://vk.com/akmstudios'
+  instagram: 'https://www.instagram.com/akm__studios/',
+  telegram: '',   // пока неактивен; например 'https://t.me/akmstudios'
+  vk: '',         // пока неактивен; например 'https://vk.com/akmstudios'
   mail: '',       // например 'mailto:hello@akmstudios.ru'
 };
 
@@ -16,7 +17,7 @@ const AKM_CONFIG = {
   document.querySelectorAll('[data-contact]').forEach(a => {
     const url = AKM_CONFIG[a.dataset.contact];
     if (url) { a.href = url; if (/^https?:/.test(url)) { a.target = '_blank'; a.rel = 'noopener'; } }
-    else { a.setAttribute('aria-disabled', 'true'); a.addEventListener('click', e => e.preventDefault()); }
+    else a.remove(); // ссылки нет — кнопку не показываем
   });
 
   /* фоновое видео: на телефоне лёгкая версия.

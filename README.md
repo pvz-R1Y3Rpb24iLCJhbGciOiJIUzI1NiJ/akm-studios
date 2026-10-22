@@ -19,13 +19,14 @@
 
 ```js
 const AKM_CONFIG = {
+  instagram: 'https://www.instagram.com/akm__studios/',
   telegram: 'https://t.me/...',
   vk: 'https://vk.com/...',
   mail: 'mailto:...',
 };
 ```
 
-Пустая ссылка не кликается.
+Кнопка с пустой ссылкой на сайте не показывается — сейчас видна только Instagram. Чтобы появились Telegram, ВКонтакте или почта, впишите ссылку.
 
 ## Как опубликовать
 
