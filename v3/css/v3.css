@@ -148,3 +148,82 @@ html:not(.ready) .top { opacity: 0; pointer-events: none; }
   .venn text, .venn-logo { transition: none; }
 }
 @media (prefers-reduced-motion: reduce) { .scene video { transition: none; } }
+
+/* =====================================================================
+   ТЕЛЕФОН: первый экран как кадр фильма — сверху метка кадра, середина отдана видео,
+   внизу на плотном затемнении заголовок, одна фраза, услуги строкой и две кнопки
+   ===================================================================== */
+@media (max-width: 760px) {
+  .top { padding-top: max(18px, env(safe-area-inset-top)); padding-bottom: 14px; }
+  .v3-nav { display: flex; gap: 0; }
+  .v3-nav a:not([href="#contact"]) { display: none; }
+  .v3-nav a[href="#contact"] { padding: 7px 14px; border: 1px solid rgba(241, 238, 232, .22); border-radius: 999px; font-size: 13px; color: var(--text); }
+
+  .card { min-height: 100svh; height: 100svh; grid-template-rows: 1fr auto; padding-top: 0; padding-bottom: max(22px, calc(env(safe-area-inset-bottom) + 14px)); }
+  .shade { background: linear-gradient(180deg, rgba(14, 14, 15, .7) 0%, rgba(14, 14, 15, 0) 20%, rgba(14, 14, 15, 0) 38%, rgba(14, 14, 15, .55) 56%, rgba(14, 14, 15, .94) 78%, #0E0E0F 100%); }
+
+  .main { display: block; padding-bottom: 22px; }
+  .title { font-size: clamp(28px, 8.2vw, 40px); line-height: 1.08; letter-spacing: -.04em; text-shadow: none; }
+  .lead { margin-top: 14px; font-size: 15px; line-height: 1.45; color: var(--text); text-shadow: none; }
+  .lead-more { display: none; }
+
+  /* метка кадра — одной строкой под шапкой, как в видоискателе */
+  .ai { position: absolute; top: calc(max(18px, env(safe-area-inset-top)) + 58px); left: max(var(--pad), env(safe-area-inset-left));
+    display: flex; align-items: center; gap: 10px; min-width: 0; padding: 7px 12px; border-left: 0; border-radius: 999px;
+    background: rgba(14, 14, 15, .45); border: 1px solid rgba(241, 238, 232, .14); }
+  .ai-top { font-size: 10px; letter-spacing: .12em; }
+  .ai-name { margin: 0; font-size: 12px; }
+  .ai-nums { display: none; }
+
+  .bottom { gap: 16px; padding-top: 0; border-top: 0; }
+  .services { gap: 4px 0; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  .services li + li::before { content: "·"; margin: 0 8px; }
+  .contacts { display: grid; grid-template-columns: 1fr auto; gap: 10px; }
+  .contacts .btn { height: 52px; justify-content: center; }
+  .contacts .btn-mail { flex-direction: row; }
+  .contacts .btn-vk, .copy { display: none; }
+}
+@media (max-width: 760px) and (max-height: 640px) {
+  .title { font-size: 26px; }
+  .lead { display: none; }
+}
+
+/* ТЕЛЕФОН: блоки ниже */
+.swipe, .venn-legend { display: none; }
+@media (max-width: 760px) {
+  .services { gap: 4px 14px; }
+  .services li + li::before { content: none; }
+
+  /* сцены — вертикальные карточки 4:5, листаются вбок */
+  .swipe { display: inline; color: var(--text-2); }
+  .scenes { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain;
+    margin-right: calc(-1 * max(var(--pad), env(safe-area-inset-right))); padding-right: max(var(--pad), env(safe-area-inset-right)); scrollbar-width: none; }
+  .scenes::-webkit-scrollbar { display: none; }
+  .scene, .scene.wide { flex: 0 0 78vw; scroll-snap-align: start; }
+  .scene-v, .scene.wide .scene-v { aspect-ratio: 4 / 5; border-radius: 4px; }
+  .scene-t { flex-wrap: wrap; gap: 4px 10px; margin-top: 14px; }
+  .scene-tag, .scene p { padding-left: 0; }
+  .scene p { font-size: 14px; }
+
+  /* схема: подписи — легендой под кольцами, логотип крупнее */
+  .venn text { display: none; }
+  .venn-logo { width: 25%; }
+  .venn-legend { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 18px; }
+  .venn-legend div:last-child { text-align: right; }
+  .venn-legend dt { font-size: 16px; font-weight: 300; }
+  .venn-legend dd { margin-top: 4px; font-size: 12px; color: var(--muted); }
+
+  /* процесс — шкала: номер слева, текст справа */
+  .steps { grid-template-columns: 1fr; }
+  .steps li, .steps li + li { display: grid; grid-template-columns: 38px 1fr; column-gap: 0; padding: 20px 0; border-left: 0; }
+  .steps li + li { border-top: 1px solid rgba(241, 238, 232, .14); }
+  .steps span { grid-row: span 2; padding-top: 3px; }
+  .steps b { margin-top: 0; font-size: 18px; }
+  .steps p { margin-top: 6px; font-size: 14px; }
+
+  .x { padding-top: 84px; padding-bottom: 84px; }
+  .x-head { flex-direction: column; align-items: flex-start; gap: 14px; margin-bottom: 30px; }
+  .x-head .x-kicker { order: -1; }
+  .x-h2 { font-size: clamp(26px, 7.6vw, 34px); }
+  .x-contact { font-size: clamp(38px, 11vw, 52px); }
+}
