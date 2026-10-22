@@ -27,23 +27,38 @@
     data-src-desktop="media/card.mp4" data-src-mobile="media/card_720.mp4" aria-hidden="true"></video>
   <div class="shade" aria-hidden="true"></div>
 
+  <!-- ИНТРО: ролик внутри букв логотипа; от первого движения (или сам через пару секунд) камера влетает в букву K -->
+  <div class="intro" aria-hidden="true">
+    <div class="intro-mask"><img src="media/AKM_mask_full.svg" alt=""></div>
+    <p class="intro-en">AI Cinema &amp; Music Video Production</p>
+    <p class="intro-cue"><span>Листайте</span><i></i></p>
+  </div>
+
   <header class="top in" style="--d:.1s">
     <img class="logo" src="media/AKM_site.svg" alt="AKM Studios" width="196" height="22">
     <span class="tagline">AI Cinema &amp; Music Video Production</span>
   </header>
 
   <section class="main">
+   <div class="main-text">
     <h1 class="title">
       <span class="in" style="--d:.3s">Кадры, которые</span>
       <span class="in" style="--d:.45s">невозможно снять</span>
       <span class="in accent" style="--d:.6s">на камеру</span>
     </h1>
-    <p class="lead in" style="--d:.85s">Музыкальные клипы и визуал для артистов. Постановка, свет и масштаб большого кино.</p>
+    <p class="lead in" style="--d:.85s">Музыкальные клипы, созданные с ИИ под руководством режиссёра. Постановка, свет и масштаб большого кино.</p>
+   </div>
+    <!-- что сейчас в кадре: ИИ-параметры меняются вместе с планами ролика -->
+    <div class="ai in" style="--d:1s" aria-hidden="true">
+      <p class="ai-top"><i class="ai-dot"></i>ИИ-генерация · кадр <b data-ai="n">01</b> / 04</p>
+      <p class="ai-name" data-ai="name">Павильон «Северный полюс»</p>
+      <p class="ai-nums">seed <b data-ai="seed">48213907</b> · итераций <b data-ai="iter">186</b> · дублей <b data-ai="takes">64</b></p>
+    </div>
   </section>
 
   <footer class="bottom">
     <ul class="services in" style="--d:1.05s" aria-label="Что мы делаем">
-      <li>Клипы</li><li>Лирик-видео</li><li>Обложки</li><li>Тизеры</li><li>Титры</li>
+      <li>ИИ-клипы</li><li>Лирик-видео</li><li>Обложки</li><li>Тизеры</li><li>Титры</li>
     </ul>
     <nav class="contacts in" style="--d:1.2s" aria-label="Связаться">
       <!-- ссылки задаются в js/main.js, блок AKM_CONFIG -->
