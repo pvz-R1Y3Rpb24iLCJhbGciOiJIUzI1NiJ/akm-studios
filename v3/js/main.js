@@ -477,9 +477,9 @@ const AKM_CONFIG = {
   /* ---------- ИИ-строка (как в версии 1) ---------- */
   const SHOTS = [
     { t: 0, name: 'Орбита', seed: 48213907, iter: 186, takes: 64 },
-    { t: 2.8, name: 'Бумажный кит', seed: 73920184, iter: 214, takes: 41 },
-    { t: 5.05, name: 'Алое поле', seed: 15887302, iter: 162, takes: 37 },
-    { t: 7.59, name: 'Созвездие', seed: 90461178, iter: 248, takes: 52 },
+    { t: 2.8, name: 'Город под зонтами', seed: 73920184, iter: 214, takes: 41 },
+    { t: 4.8, name: 'Двор в гирляндах', seed: 15887302, iter: 162, takes: 37 },
+    { t: 6.96, name: 'Созвездие', seed: 90461178, iter: 248, takes: 52 },
   ];
   const el = k => card.querySelector(`[data-ai="${k}"]`);
   const nEl = el('n'), nameEl = el('name'), seedEl = el('seed'), iterEl = el('iter'), takesEl = el('takes');
